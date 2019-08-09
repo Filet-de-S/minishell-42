@@ -1,0 +1,23 @@
+so be sure to code the cleanest, simplest program possible. 
+Otherwise, you’ll probably have 2 start from scratch for your 21sh
+and that would be a real shame.
+
+malloc, free
+access
+open, close, read, write
+opendir, readdir, closedir
+getcwd, chdir
+stat, lstat, fstat
+
+fork, execve
+wait, waitpid, wait3, wait4 
+signal, kill
+exit
+
+TODO: 
+-echo;
+-cd;
+-setenv;
+-unsetenv;
+-env;
+-exit.
