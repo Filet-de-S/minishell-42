@@ -21,3 +21,12 @@ TODO:
 -unsetenv;
 -env;
 -exit.
+
+
+! errno ADAPT!
+! PATH and ENV (copy of system char **environ)
+! 
+
+TOASK:
+	tilda https://www.gnu.org/software/bash/manual/html_node/Tilde-Expansion.html#Tilde-Expansion
+	
