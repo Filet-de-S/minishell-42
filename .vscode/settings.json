@@ -1,5 +1,7 @@
 {
 	"files.associations": {
-		"minishft.h": "c"
+		"minishft.h": "c",
+		"__config": "cpp",
+		"libft.h": "c"
 	}
 }

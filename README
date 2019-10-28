@@ -29,4 +29,9 @@ TODO:
 
 TOASK:
 	tilda https://www.gnu.org/software/bash/manual/html_node/Tilde-Expansion.html#Tilde-Expansion
-	
+
+
+
+TODO:
+	f.objpath -– parse ENV PATH and return PATH of obj;
+	PATH=/Users/kkatelyn/.brew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki:/Users/kkatelyn/.brew/bin
