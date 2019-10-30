@@ -1,51 +1,60 @@
 #include "minishft.h"
 extern char **environ;
 
-int		err_msg(char *e, char *info)
+int		err_msg(int st, char *info)
 {
-	if (e == "mem")
+	if (st == 1)
 		write(2, "msh: Cannot allocate memory\n", 28);
-	else if (e == "nobj")
+	else
 	{
 		write(2, "msh: ", 5);
 		write(2, info, ft_strlen(info));
-		write(2, ": command not found\n";
+		st == 2 ? write(2, ": command not found\n", 20) :
+        write(2, ": No such file or directory\n", 20);
 	}
 	return (0);
 }
 
-char	*obj_path(char *needle)
+char	*env_path(void)
 {
-	size_t			i;
-	char			*path;
-	int				j;
+	size_t	i;
+	char	*path;
+	int		j;
 
 	i = -1;
 	j = 0;
 	while(environ[++i])
 		if (ft_strstr(environ[i], "PATH") != NULL)
 			break;
-	if (environ[i] == NULL)
+	if (environ[i] == 0)
 		return (NULL);
 	while (environ[i][j] != '/')
 		j++;
-	if ((path = search_obj(environ[i][j], needle) == NULL))
-		return (NULL);
-	return path;
+	path = (char *)environ[i][j];
+	return (path);
 }
 
-int		child_action(int *pid, int *wpid, int *status, char **cmd_run)
+int		child_action(char *path_env, char **cmd_run, char *needle, int next)
 {
-	char *objpath;
+	int		pid;
+	int		wpid;
+    int     *status;
+    char    *path;
 
-	//get path of objBIN
-	if ((objpath = obj_path(cmd_run[0])) == NULL)
-		return (-1);
-	*pid = fork();
-	if (*pid == 0) //if child
+    //search bin if (first symbol is'/' then error
+	needle[0] == '/' ? (path = needle) : (path = search_obj(path_env, needle, next));
+	if (!path)
+        return (NULL);
+	pid = fork();
+	if (pid == 0) //if child
 	{
-		if (execve(objpath, cmd_run, environ))
-			perror("execve....: ");
+		if ((status = execve(path, cmd_run, environ)) == ;
+		needle[0] == '/' ? return(1); : return (child_action(path_env, cmd_run, ++next));
+
+			//if execve == PERM DENIED – save error, and in case there is no further obj, print error
+			// struct? 
+		//perror of first name of path
+		printf("Chaochao %d\n", next);
 		exit(-1);
 	}
 	else if (*pid < 0) //if fork problem
@@ -63,19 +72,22 @@ int		exec_sh(char **to_run)
 {
 	char	**cmd_run;
 	int		i;
-	int		pid;
-	int		wpid;
 	int		status;
+	char 	*path_env;
 
 	i = -1;
 	cmd_run = NULL;
 	while(to_run[++i])
 	{
 		//split cmd and args by ` `
-		if ((cmd_run = ft_strsplit(to_run[i], ' ')) == NULL && !err_msg("mem", NULL))
+		if ((cmd_run = ft_strsplit(to_run[i], ' ')) == NULL && !err_msg(1, NULL))
 			return(1);
+		//get path of objBIN
+		if ((path_env = env_path()) == NULL && cmd_run[0][0] != '/' &&
+		    access(cmd_run[0], F_OK) && !err_msg(3, "env"))
+			return (-1); // no path (no env)
 		//run cmd with all staff
-		if ((child_action(&pid, &wpid, &status, cmd_run)) == -1 && !ft_strdl(cmd_run))
+		if ((child_action(path_env, cmd_run, cmd_run[0], 0)) == -1 && !ft_strdl(cmd_run))
 			return (1);
 		ft_strdl(cmd_run);
 	}
@@ -97,13 +109,13 @@ int		main(int ac, char **av)
 	{
 		write(1, "{*__*} > ", 9);
 		//lets get a full cmd line
-		if ((get_next_line(0, &to_parse) == -1 && !err_msg("mem", NULL)) || to_parse == NULL)
+		if ((get_next_line(0, &to_parse) == -1 && !err_msg(1, NULL)) || to_parse == NULL)
 			continue;
 		//split cmds by `;` and return 2d array
 		if ((to_run = ft_strsplit(to_parse, ';')) != NULL)
 			status = exec_sh(to_run); //and exec cmd one by one
 		else
-			err_msg("mem", NULL);
+			err_msg(1, NULL);
 		ft_strdl(to_run);
 		ft_strdel(to_parse);
 	}

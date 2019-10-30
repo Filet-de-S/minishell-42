@@ -1,22 +1,18 @@
 #include "minishft.h"
 
-
-char	*search_obj(char **env_path, char *needle)
+char	*search_obj(char *env_path, char *needle, int next)
 {
 	char	*path;
-	int		i;
 	char	*bin_p;
 
-	if (!(path = ft_strsplit(*env_path, ':')) && !err_msg("mem", NULL))
+	if (!(path = ft_strsplit(env_path, ':')) && !err_msg(1, NULL))
 		return (NULL);
-	i = -1;
-	while (path[++i])
+	while (path[next])
 	{
-		if (!(bin_p = ft_strjoin(path[i], needle)) && !err_msg("mem, NULL"))
+		if (!(bin_p = ft_strjoin(path[next], needle)) && !err_msg(1, NULL) && !ft_strdl(path))
 			return (NULL);
-		if (!access(bin_p, F_OK))
+		if (!access(bin_p, F_OK) && !ft_strdl(path))
+			return (bin_p);
 	}
-	// if (!(d = opendir(path)))
-		// perror("cant open dir::sHH.."); //fix and find errors for MANUAL;
-	if pa!err_msg("nobj", cmd_run[0]
+	return (NULL);
 }
