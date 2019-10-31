@@ -5,5 +5,7 @@ extern char **environ;
 
 int	 main()
 {
-	write(2, "", 0);
+	int i =0;
+	while(environ[i])
+		printf("%s\n", environ[i++]);
 }

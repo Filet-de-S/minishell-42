@@ -9,13 +9,13 @@ int		err_msg(int st, char *info)
 	{
 		write(2, info, ft_strlen(info));
 		if (st == 2)
-			write(2, ": command not found\n", 20);
+			write(2, ": Command not found\n", 20);
 		else if (st == 3)
-        	write(2, ": No such file or directory\n", 20);
+        	write(2, ": No such file or directory\n", 28);
 		else if (st == 4)
-			write(2, ": Permsission denied\n", 21);
+			write(2, ": Permission denied\n", 20);
 		else
-			write(2, ": can't fork\n", 13);
+			write(2, ": Can't fork\n", 13);
 	}
 	return (0);
 }
@@ -23,17 +23,16 @@ int		err_msg(int st, char *info)
 int		child_action(char *path_env, char **cmd_run, char *cmd, int next)
 {
 	pid_t	pid;
-	pid_t	wpid;
     int     status;
 	int		last;
     char    *cmd_path;
 
 	//run if built-in
-	if ((status = is_builtin(cmd)) > 0)
+	if ((status = is_builtin(cmd, cmd_run)) >= -1)
 		return (status);
     //search bin if (first symbol is '/' then error
 	last = -1;
-	cmd[0] == '/' ? (cmd_path = cmd) : (cmd_path = search_obj(path_env, cmd, next, &last));
+	cmd[0] == '/' ? (cmd_path = cmd) : (cmd_path = search_obj(path_env, cmd, &next, &last));
 	if (!cmd_path)
 		return (-1);
 	pid = fork();
@@ -50,14 +49,15 @@ int		child_action(char *path_env, char **cmd_run, char *cmd, int next)
 		}
 		else if (last == -1)
 			err_msg(4, cmd_path);
+		else// if (next != last && last != -1)
+			child_action(path_env, cmd_run, cmd, ++next);
 		exit(1);
 	}
 	else if (pid < 0) //if fork problem
 		err_msg(5, cmd_path);
-	else //if parent
-	{
-		waitpid()
-	}
+	//if parent
+	else if(waitpid(pid, NULL, 0) == -1)
+		write(2, "msh: waitpid error *_*\n", 23);
 	return (1);
 }
 
