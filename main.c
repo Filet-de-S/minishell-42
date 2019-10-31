@@ -1,69 +1,62 @@
 #include "minishft.h"
-extern char **environ;
 
 int		err_msg(int st, char *info)
 {
+	write(2, "msh: ", 5);
 	if (st == 1)
-		write(2, "msh: Cannot allocate memory\n", 28);
+		write(2, "Cannot allocate memory\n", 23);
 	else
 	{
-		write(2, "msh: ", 5);
 		write(2, info, ft_strlen(info));
-		st == 2 ? write(2, ": command not found\n", 20) :
-        write(2, ": No such file or directory\n", 20);
+		if (st == 2)
+			write(2, ": command not found\n", 20);
+		else if (st == 3)
+        	write(2, ": No such file or directory\n", 20);
+		else if (st == 4)
+			write(2, ": Permsission denied\n", 21);
+		else
+			write(2, ": can't fork\n", 13);
 	}
 	return (0);
 }
 
-char	*env_path(void)
+int		child_action(char *path_env, char **cmd_run, char *cmd, int next)
 {
-	size_t	i;
-	char	*path;
-	int		j;
+	pid_t	pid;
+	pid_t	wpid;
+    int     status;
+	int		last;
+    char    *cmd_path;
 
-	i = -1;
-	j = 0;
-	while(environ[++i])
-		if (ft_strstr(environ[i], "PATH") != NULL)
-			break;
-	if (environ[i] == 0)
-		return (NULL);
-	while (environ[i][j] != '/')
-		j++;
-	path = (char *)environ[i][j];
-	return (path);
-}
-
-int		child_action(char *path_env, char **cmd_run, char *needle, int next)
-{
-	int		pid;
-	int		wpid;
-    int     *status;
-    char    *path;
-
-    //search bin if (first symbol is'/' then error
-	needle[0] == '/' ? (path = needle) : (path = search_obj(path_env, needle, next));
-	if (!path)
-        return (NULL);
+	//run if built-in
+	if ((status = is_builtin(cmd)) > 0)
+		return (status);
+    //search bin if (first symbol is '/' then error
+	last = -1;
+	cmd[0] == '/' ? (cmd_path = cmd) : (cmd_path = search_obj(path_env, cmd, next, &last));
+	if (!cmd_path)
+		return (-1);
 	pid = fork();
 	if (pid == 0) //if child
 	{
-		if ((status = execve(path, cmd_run, environ)) == ;
-		needle[0] == '/' ? return(1); : return (child_action(path_env, cmd_run, ++next));
-
-			//if execve == PERM DENIED – save error, and in case there is no further obj, print error
-			// struct? 
-		//perror of first name of path
-		printf("Chaochao %d\n", next);
-		exit(-1);
+		execve(cmd_path, cmd_run, environ);
+		if (next == last)
+		{
+			cmd_path = search_obj(path_env, cmd, 0, 0);
+			if (!cmd_path)
+				err_msg(4, "");
+			else
+				err_msg(4, cmd_path);
+		}
+		else if (last == -1)
+			err_msg(4, cmd_path);
+		exit(1);
 	}
-	else if (*pid < 0) //if fork problem
-	{
-		perror("pid < 0 forkiiing:: ");
-	}
+	else if (pid < 0) //if fork problem
+		err_msg(5, cmd_path);
 	else //if parent
 	{
-		
+		waitpid()
 	}
 	return (1);
 }
@@ -85,7 +78,7 @@ int		exec_sh(char **to_run)
 		//get path of objBIN
 		if ((path_env = env_path()) == NULL && cmd_run[0][0] != '/' &&
 		    access(cmd_run[0], F_OK) && !err_msg(3, "env"))
-			return (-1); // no path (no env)
+			return (-1); // no path (no env), (2) doesn't start with '/', (3) file is not in this dir 
 		//run cmd with all staff
 		if ((child_action(path_env, cmd_run, cmd_run[0], 0)) == -1 && !ft_strdl(cmd_run))
 			return (1);
