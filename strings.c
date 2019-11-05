@@ -45,7 +45,7 @@ char	*search_obj(char *env_path, char *needle, int *next, int **last)
 	return (NULL);
 }
 
-char	*env_path(void)
+char	*env_path(char *needle)
 {
 	size_t	i;
 	char	*path;
@@ -54,12 +54,13 @@ char	*env_path(void)
 	i = -1;
 	j = 0;
 	while(environ[++i])
-		if (ft_strstr(environ[i], "PATH") != NULL)
+		if (ft_strstr(environ[i], needle) != NULL)
 			break;
 	if (environ[i] == 0)
 		return (NULL);
-	while (environ[i][j] != '/')
+	while (environ[i][j] != '=')
 		j++;
+	j++;
 	path = (char *)environ[i][j];
 	return (path);
 }

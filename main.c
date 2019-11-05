@@ -68,7 +68,7 @@ int		exec_sh(char **to_run)
 		if ((cmd_run = ft_strsplit(to_run[i], ' ')) == NULL && !err_msg(1, NULL))
 			return(1);
 		//get path of objBIN
-		if ((path_env = env_path()) == NULL && cmd_run[0][0] != '/' &&
+		if ((path_env = env_path("PATH")) == NULL && cmd_run[0][0] != '/' &&
 		    access(cmd_run[0], F_OK) && !err_msg(3, "env"))
 			return (-1); // no path (no env), (2) doesn't start with '/', (3) file is not in this dir 
 		//run cmd with all staff
