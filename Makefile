@@ -1,14 +1,19 @@
 NAME = minishell
 
-SRC = main.c
+SRC = main.c, string.c
 
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
 
 $(NAME):
-	make -C lib
-	gcc -Wall -Wextra -Werror -I lib/includes -c $(SRC)
+	@git submodule init
+    @git submodule update
+	@make -C libft
+	@gcc -Wall -Wextra -Werror -I libft/includes -I includes -c $(SRC)
+	@mkdir -p $(OBJDIR);
+	@mv $(OBJ)
+	
 	gcc -o $(NAME) $(OBJ) -L lib -lft
 
 clean:

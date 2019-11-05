@@ -1,56 +1,45 @@
 #include "minishft.h"
 
-int		err_msg(int st, char *info)
-{
-	write(2, "msh: ", 5);
-	if (st == 1)
-		write(2, "Cannot allocate memory\n", 23);
-	else
-	{
-		write(2, info, ft_strlen(info));
-		if (st == 2)
-			write(2, ": Command not found\n", 20);
-		else if (st == 3)
-        	write(2, ": No such file or directory\n", 28);
-		else if (st == 4)
-			write(2, ": Permission denied\n", 20);
-		else
-			write(2, ": Can't fork\n", 13);
-	}
-	return (0);
-}
-
-int		child_action(char *path_env, char **cmd_run, char *cmd, int next)
+int		child_action(char *path_env, char **cmd_run, int **last, int next)
 {
 	pid_t	pid;
     int     status;
-	int		last;
     char    *cmd_path;
 
 	//run if built-in
-	if ((status = is_builtin(cmd, cmd_run)) >= -1)
+	if ((cmd_run[0][0] != '/' && (cmd_run[0][0] != '.')) && 
+		(status = is_builtin(cmd_run[0], cmd_run)) >= -1)
 		return (status);
     //search bin if (first symbol is '/' then error
-	last = -1;
-	cmd[0] == '/' ? (cmd_path = cmd) : (cmd_path = search_obj(path_env, cmd, &next, &last));
-	if (!cmd_path)
-		return (-1);
+
+	if (cmd_run[0][0] == '/' || (cmd_run[0][0] == '.' && cmd_run[0][1] == '/'))
+	{
+		if (access((cmd_path = cmd_run[0]), F_OK) && !err_msg(3, cmd_path))
+			return (-1);
+	}
+	else if ((cmd_path = search_obj(path_env, cmd_run[0], &next, &last)) == NULL)
+	{
+		// if path's dir is not ended and malloc error and it's parent
+		//    or PATH is empty for bin and it;s parent
+		if (*last[1] == 0 || (*last[1] == -1 && !err_msg(2, cmd_path)))
+			return (-1);
+		else
+		{
+			cmd_path = search_obj(path_env, cmd_run[0], 0, 0);
+			cmd_path == NULL ? err_msg(4, "couldn't malloc cmd name") : err_msg(4, cmd_path);
+			ft_strdel(&cmd_path);
+			exit(1);
+		}
+	}
 	pid = fork();
+	*last[1]++;
 	if (pid == 0) //if child
 	{
 		execve(cmd_path, cmd_run, environ);
-		if (next == last)
-		{
-			cmd_path = search_obj(path_env, cmd, 0, 0);
-			if (!cmd_path)
-				err_msg(4, "");
-			else
-				err_msg(4, cmd_path);
-		}
-		else if (last == -1)
+		if (*last[0] == -1) // if bin is not from search_obj
 			err_msg(4, cmd_path);
 		else// if (next != last && last != -1)
-			child_action(path_env, cmd_run, cmd, ++next);
+			child_action(path_env, cmd_run, last, ++next);
 		exit(1);
 	}
 	else if (pid < 0) //if fork problem
@@ -67,11 +56,14 @@ int		exec_sh(char **to_run)
 	int		i;
 	int		status;
 	char 	*path_env;
+	int		last[2];
 
 	i = -1;
 	cmd_run = NULL;
 	while(to_run[++i])
 	{
+		last[0] = -1;
+		last[1] = 0;
 		//split cmd and args by ` `
 		if ((cmd_run = ft_strsplit(to_run[i], ' ')) == NULL && !err_msg(1, NULL))
 			return(1);
@@ -80,7 +72,7 @@ int		exec_sh(char **to_run)
 		    access(cmd_run[0], F_OK) && !err_msg(3, "env"))
 			return (-1); // no path (no env), (2) doesn't start with '/', (3) file is not in this dir 
 		//run cmd with all staff
-		if ((child_action(path_env, cmd_run, cmd_run[0], 0)) == -1 && !ft_strdl(cmd_run))
+		if ((child_action(path_env, cmd_run, last, 0)) == -1 && !ft_strdl(cmd_run))
 			return (1);
 		ft_strdl(cmd_run);
 	}
