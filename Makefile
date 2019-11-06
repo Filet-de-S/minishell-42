@@ -2,29 +2,35 @@ NAME = minishell
 
 SRC = main.c, string.c
 
-OBJ = $(SRC:.c=.o)
+OBJ = $(addprefix obj/, SRC:.c=.o)
 
 all: $(NAME)
+$(NAME): libft objdir $(OBJ)
+	@gcc -g -L libft -lft $(OBJ) -o $(NAME)
+	@echo "Minishell is ready to use"
 
-$(NAME): libft 
-	@git submodule init
-    @git submodule update
-	@make -C libft
-	@gcc -Wall -Wextra -Werror -I libft/includes -I includes -c $(SRC)
-	@mkdir -p $(OBJDIR);
-	@mv $(OBJ)
-	
-	gcc -o $(NAME) $(OBJ) -L lib -lft
+obj/%.o: %.c
+	@gcc -Wall -Wextra -Werror -g -I libft/includes -I includes -c $< -o $@
+	@echo "new obj created: $@"
+
+objdir:
+	[ -d obj ] || mkdir obj
 
 libft:
-	...rules
+	@git submodule init
+    @git submodule update
+	@$(MAKE) -C libft
+	@echo "libft is compiled!"
 
 clean:
-	rm -f $(OBJ)
-	make -C lib clean
+	@$(MAKE) -C libft clean
+	@rm -rf obj
+	@echo "Obj Cleaned!"
 
 fclean: clean
-	rm -f $(NAME)
-	make -C lib fclean
+	@rm -f $(NAME)
+	@$(MAKE) -C libft fclean
+	@echo "Full Cleaned!"
+
 
 re: fclean all
