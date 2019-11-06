@@ -6,7 +6,7 @@ OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
 
-$(NAME):
+$(NAME): libft 
 	@git submodule init
     @git submodule update
 	@make -C libft
@@ -15,6 +15,9 @@ $(NAME):
 	@mv $(OBJ)
 	
 	gcc -o $(NAME) $(OBJ) -L lib -lft
+
+libft:
+	...rules
 
 clean:
 	rm -f $(OBJ)

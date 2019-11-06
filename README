@@ -32,4 +32,5 @@ TOASK:
 	
 TODO:
 	parse for " / ' closing . \ ";))))))))))))))
+	make printchar;
 	
