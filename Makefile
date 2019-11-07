@@ -1,16 +1,16 @@
 NAME = minishell
 
-SRC = main.c, string.c
+CORE = main.c, string.c
 
-OBJ = $(addprefix obj/, SRC:.c=.o)
+CORE = $(addprefix core/, CORE:.c=.o)
 
 all: $(NAME)
 $(NAME): libft objdir $(OBJ)
-	@gcc -g -L libft -lft $(OBJ) -o $(NAME)
+	@gcc -g -L libft -lft obj/$(OBJ) -o $(NAME)
 	@echo "Minishell is ready to use"
 
-obj/%.o: %.c
-	@gcc -Wall -Wextra -Werror -g -I libft/includes -I includes -c $< -o $@
+%.o: %.c
+	@gcc -Wall -Wextra -Werror -g -I libft/includes -I includes -c $< -o obj/$@
 	@echo "new obj created: $@"
 
 objdir:
@@ -31,6 +31,5 @@ fclean: clean
 	@rm -f $(NAME)
 	@$(MAKE) -C libft fclean
 	@echo "Full Cleaned!"
-
 
 re: fclean all

@@ -8,5 +8,6 @@ char	*search_obj(char *env_path, char *needle, int *next, int **last);
 int     err_msg(int stat, char *info);
 char	*env_path(char *needle);
 int		is_builtin(char *cmd, char **cmd_run);
+int		replace_symbols(char **to_parse);
 
 #endif

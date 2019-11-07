@@ -1,5 +1,25 @@
 #include "minishft.h"
 
+int		err_msg(int st, char *info)
+{
+	write(2, "msh: ", 5);
+	if (st == 1)
+		write(2, "Cannot allocate memory\n", 23);
+	else
+	{
+		write(2, info, ft_strlen(info));
+		if (st == 2)
+			write(2, ": Command not found\n", 20);
+		else if (st == 3)
+        	write(2, ": No such file or directory\n", 28);
+		else if (st == 4)
+			write(2, ": Permission denied\n", 20);
+		else
+			write(2, ": Can't fork\n", 13);
+	}
+	return (0);
+}
+
 int		child_action(char *path_env, char **cmd_run, int **last, int next)
 {
 	pid_t	pid;
@@ -84,20 +104,21 @@ int		main(int ac, char **av)
 	int		status;
 	char	*to_parse;
 	char	**to_run;
-	int		gnl;
 	
 	status = 1;
 	to_parse = NULL;
 	to_run = NULL;
-	gnl = 0;
+	if (get_env() == -1)
+		exit(1);
 	while (status)
 	{
 		write(1, "{*__*} > ", 9);
 		//lets get a full cmd line
-		if ((get_next_line(0, &to_parse) == -1 && !err_msg(1, NULL)) || to_parse == NULL)
+		if ((get_next_char(1, &to_parse) == -1 && !err_msg(1, NULL)) || to_parse == NULL)
 			continue;
 		//split cmds by `;` and return 2d array
-		if ((to_run = ft_strsplit(to_parse, ';')) != NULL)
+		if (replace_symbols(&to_parse) != -1 &&
+			(to_run = ft_strsplit(to_parse, ';')) != NULL)
 			status = exec_sh(to_run); //and exec cmd one by one
 		else
 			err_msg(1, NULL);
