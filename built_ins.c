@@ -2,6 +2,8 @@
 
 int		is_builtin(char *cmd, char **cmd_run)
 {
+	if (cmd[0] == '/' || cmd[0] == '.')
+		return (-2);
 	if (!ft_strcmp(cmd, "echo"))
 		return (in_echo(cmd_run));
 	else if (!ft_strcmp(cmd, "cd"))

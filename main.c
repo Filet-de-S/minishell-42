@@ -60,6 +60,8 @@ int		exec_sh(char **to_run)
 	{
 		last[0] = -1;
 		last[1] = 0;
+		if (replace_exp(&to_run[i]) == -1)
+			return (-1);
 		//split cmd and args by ` `
 		if ((cmd_run = ft_strsplit(to_run[i], ' ')) == NULL && !err_msg(1, NULL))
 			return(1);
@@ -95,8 +97,7 @@ int		main(int ac, char **av)
 		if ((get_next_char(1, &to_parse) == -1 && !err_msg(1, NULL)) || to_parse == NULL)
 			continue;
 		//split cmds by `;` and return 2d array
-		if (replace_symbols(&to_parse) != -1 &&
-			(to_run = ft_strsplit(to_parse, ';')) != NULL)
+		if ((to_run = ft_strsplit(to_parse, ';')) != NULL)
 			status = exec_sh(to_run); //and exec cmd one by one
 		else
 			err_msg(1, NULL);
