@@ -13,5 +13,9 @@ int		is_builtin(char *cmd, char **cmd_run);
 int		replace_exp(char **to_parse);
 char	*split_count(char *env, char needle, int **last);
 int		replace_string(char **to_replace, char *var, int st, int l);
+int		in_cd(char **cmd_run);
+int 	in_exit(void);
+int		in_setenv(char **cmd_run, int i, char *needle);
+
 
 #endif

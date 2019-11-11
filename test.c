@@ -5,9 +5,7 @@
 #include <pwd.h>
 
 int	main() {
-	char *s;
-	
-	if (!(s = malloc(SIZE_MAX)))
-		perror("");
-	
+	int i;
+	if (opendir("/Users/kkatelyn/minishell/libft") == NULL)
+		printf("OK");
 }

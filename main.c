@@ -46,7 +46,7 @@ int		child_action(char *path_env, char **cmd_run, int **last, int next)
 	return (1);
 }
 
-int		exec_sh(char **to_run)
+int		exec_sh(char **to_run, int j)
 {
 	char	**cmd_run;
 	int		i;
@@ -66,15 +66,17 @@ int		exec_sh(char **to_run)
 		if ((cmd_run = ft_strsplit(to_run[i], ' ')) == NULL && !err_msg(1, NULL))
 			return(1);
 		//get path of objBIN
-		if ((path_env = env_value("PATH")) == NULL && cmd_run[0][0] != '/' &&
-		    access(cmd_run[0], F_OK) && !err_msg(3, "env"))
+		if ((path_env = env_value("PATH")) == NULL &&
+			access(cmd_run[0], F_OK) && !err_msg(3, "env"))
 			return (-1); // no path (no env), (2) doesn't start with '/', (3) file is not in this dir 
 		//run cmd with all staff
-		if ((child_action(path_env, cmd_run, last, 0)) == -1 && !ft_strdl(cmd_run) &&
+		if ((j = child_action(path_env, cmd_run, last, 0)) == -1 && !ft_strdl(cmd_run) &&
 			!ft_strdl(path_env))
 			return (1);
 		ft_strdl(cmd_run);
 		ft_strdl(path_env);
+		if (j == -5)
+			return (-5);
 	}
 	return (1);
 }
@@ -88,9 +90,9 @@ int		main(int ac, char **av)
 	status = 1;
 	to_parse = NULL;
 	to_run = NULL;
-	if (get_env() == -1)
+	if (get_env(NULL, 0) == -1)
 		exit(1);
-	while (status)
+	while (status != -5)
 	{
 		write(1, "{*__*} > ", 9);
 		//lets get a full cmd line
@@ -98,12 +100,12 @@ int		main(int ac, char **av)
 			continue;
 		//split cmds by `;` and return 2d array
 		if ((to_run = ft_strsplit(to_parse, ';')) != NULL)
-			status = exec_sh(to_run); //and exec cmd one by one
+			status = exec_sh(to_run, 0); //and exec cmd one by one
 		else
 			err_msg(1, NULL);
 		ft_strdl(to_run);
 		ft_strdel(to_parse);
 	}
 	//SIGNAL CATCH
-	return (0);
+	exit(1);
 }

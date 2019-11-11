@@ -20,9 +20,8 @@ int		err_msg(int st, char *info)
 	return (0);
 }
 
-int		get_env(void)
+int		get_env(char *needle, int i)
 {
-	int		i;
 	char 	**tmp;
 	int		err;
 	
@@ -30,6 +29,7 @@ int		get_env(void)
 	err = 0;
 	while (environ[++i])
 		;
+	(needle != NULL) ? i++ : (i = i);
 	if (!(tmp = (char**)malloc(sizeof(char*) * i)) && !err_msg(1, NULL))
 		err = -1;
 	else
@@ -38,10 +38,13 @@ int		get_env(void)
 		while (environ[++i])
 			if (!(tmp[i] = ft_strdup(environ[i])) && !err_msg(1, NULL) && (err = -1))
 				break;
+		if (err != -1 && needle && !(tmp[i++] = ft_strdup(needle)))
+			err = -1;
 	}
-	(err == -1) ? ft_strdl(tmp) : (environ = tmp);
+	(err == -1) ? ft_strdl(tmp) : (tmp[i] = 0);
 	if (err == -1)
 		return (-1);
+	environ = tmp;
 	return (0);
 }
 

@@ -58,14 +58,18 @@ int		replace_string(char **to_replace, char *var, int st, int l)
 	int		dl;
 
 	i = 0;
-	dl = ft_strlen(var) + ft_strlen(*to_replace) - l;
+	if (var != NULL)
+		dl = ft_strlen(var) + ft_strlen(*to_replace) - l;
+	else
+		dl = ft_strlen(*to_replace) - l;
 	if ((str = ft_strnew(dl)) == NULL)
 		return (-1);
 	while (*to_replace[i] < st)
 		str[i] = to_replace[i++];
 	dl = 0;
-	while (dl < ft_strlen(var))
-		str[i++] = var[dl++];
+	if (var != NULL)
+		while (dl < ft_strlen(var))
+			str[i++] = var[dl++];
 	dl = st + l;
 	while (*to_replace[dl])
 		str[i++] = to_replace[dl++];
