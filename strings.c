@@ -70,6 +70,6 @@ int		replace_string(char **to_replace, char *var, int st, int l)
 	while (*to_replace[dl])
 		str[i++] = to_replace[dl++];
 	ft_strdel(to_replace);
-	to_replace = str;
+	*to_replace = str;
 	return (0);
 }
