@@ -83,9 +83,9 @@ int		replace_exp(char *to_replace)
         if ((to_replace[i] == '$') &&
             (!(to_replace[i + 1]) || to_replace[i + 1] == ' '))
             continue;
-        if (to_replace[i] == '$' && dollar_exp(&i, to_replace) == -1)
+        if (to_replace[i] == '$' && dollar_exp(&i, &to_replace) == -1)
             return (-1);
-        if (to_replace[i] == '~' && tilda_exp(&i, to_replace, 0, i) == -1)
+        if (to_replace[i] == '~' && tilda_exp(&i, &to_replace, 0, i) == -1)
             return (-1);
     }
     return (0);

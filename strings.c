@@ -73,3 +73,23 @@ int		replace_string(char **to_replace, char *var, int st, int l)
 	*to_replace = str;
 	return (0);
 }
+
+char    **complete_path(char *path)
+{
+    char    **p;
+    char    *tmp;
+    int     i;
+
+    if ((p = ft_strsplit(path, ':')) == NULL && !err_msg(1, NULL))
+        return (NULL);
+    i = 0;
+    while (p[i])
+    {
+        if ((tmp = ft_strjoin(p[i], "/")) == NULL && !err_msg(1, NULL) &&
+            !ft_strdl(p))
+            return (NULL);
+        ft_strdel(&p[i]);
+        p[i++] = tmp;
+    }
+    return (p);
+}
