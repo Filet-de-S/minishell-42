@@ -9,18 +9,18 @@ int		cool_cd(char **tmp)
 {
 	char	*t;
 
-	if ((t = ft_strjoin("OLDPWD=", *tmp)) == NULL && !err_msg(1, tmp))
+	if ((t = ft_strjoin("OLDPWD=", *tmp)) == NULL && !err_msg(1, *tmp))
 	{
 		ft_strdel(tmp);
 		return (-1);
 	}
 	ft_strdel(tmp);
-	if ((in_setenv(t, 0, NULL)) == -1 && !err_msg(1, tmp))
+	if ((in_setenv(t, 0, NULL)) == -1 && !err_msg(1, *tmp))
 	{
-		ft_strdel(t);
+		ft_strdel(&t);
 		return (-1);
 	}
-	ft_strdel(t);
+	ft_strdel(&t);
 	return (1);
 }
 
@@ -34,7 +34,7 @@ int		real_cd(char *path)
 		if ((err = ft_strjoin("msh: cd: ", path)) == NULL)
 			return (-1);
 		err_msg(5, err);
-		fr_strdel(&err);
+		ft_strdel(&err);
 		return (-1);
 	}
 	if (chdir(path) == -1)
@@ -61,7 +61,7 @@ int		exec_cd(char *path)
 		if ((err = ft_strjoin("cd: ", path)) == NULL)
 			return (-1);
 		err_msg(3, err);
-		fr_strdel(&err);
+		ft_strdel(&err);
 		return (-1);
 	}
 	else if ((dir = opendir(path)) == NULL)
@@ -69,7 +69,7 @@ int		exec_cd(char *path)
 		if ((err = ft_strjoin("cd: ", path)) == NULL)
 			return (-1);
 		err_msg(4, err);
-		fr_strdel(&err);
+		ft_strdel(&err);
 		return (-1);
 	}
 	closedir(dir);

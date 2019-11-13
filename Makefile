@@ -6,7 +6,7 @@ OBJ = $(addprefix obj/, $(CORE:.c=.o))
 
 all: $(NAME)
 $(NAME): libft objdir $(OBJ)
-	@gcc -g -L libft -lft $(OBJ) -o $(NAME)
+	@gcc -g -L libft/ -lft $(OBJ) -o $(NAME)
 	@echo "Minishell is ready to use"
 
 obj/%.o: %.c
@@ -19,17 +19,19 @@ objdir:
 libft:
 	@git submodule init
 	@git submodule update
-	@$(MAKE) -C libft
+	@make -C libft
 	@echo "libft is compiled!"
 
+.PHONY: libft
+
 clean:
-	@$(MAKE) -C libft clean
+	@make -C libft clean
 	@rm -rf obj
 	@echo "Obj Cleaned!"
 
 fclean: clean
 	@rm -f $(NAME)
-	@$(MAKE) -C libft fclean
+	@make -C libft fclean
 	@echo "Full Cleaned!"
 
 re: fclean all

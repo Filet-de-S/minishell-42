@@ -25,19 +25,19 @@ int		in_echo(char **cmd_run)
 	return(1);
 }
 
-int		in_setenv(char **cmd_run, int i, char *needle)
+int		in_setenv(char *cmd_run, int i, char *needle)
 {
 	char	tmp[80];
 
-	i = 0;
+	i = -1;
 	ft_bzero(&tmp, 80);
-	while (cmd_run[1][i] && cmd_run[1][i] != '=')
-		tmp[i] = cmd_run[i++];
-	if (cmd_run[1][i] != '=')
+	while (cmd_run[++i] && cmd_run[i] != '=')
+		tmp[i] = cmd_run[i];
+	if (cmd_run[i] != '=')
 		return (-1);
 	if ((needle = env_value(tmp)) == NULL)
 	{
-		if (get_env(needle, 0) == -1)
+		if (ft_get_env(needle, 0) == -1)
 			return (-1);
 	}
 	else
@@ -46,8 +46,8 @@ int		in_setenv(char **cmd_run, int i, char *needle)
 		while (environ[++i])
 			if ((needle = ft_strstr(environ[i], tmp)) != NULL)
 				break;
-		free(environ[i]);
-		if ((environ[i] = ft_strdup(cmd_run[1])) == NULL)
+		free(&environ[i]);
+		if ((environ[i] = ft_strdup(cmd_run)) == NULL)
 			return (-1);
 	}
 	return(1);
@@ -58,7 +58,7 @@ int		in_unsetenv(char **cmd_run, int num)
 	char	*tofree;
 	int		i;
 
-	if(!cmd_run[num])
+	if (!cmd_run[num])
 		return (1);
 	i = -1;
 	while (environ[++i])
@@ -66,8 +66,9 @@ int		in_unsetenv(char **cmd_run, int num)
 			break;
 	while (environ[i])
 	{
-		ft_strdel(environ[i]);
-		environ[i] = environ[++i];
+		ft_strdel(&environ[i]);
+		environ[i] = environ[i + 1];
+		i++;
 	}
 	return (in_unsetenv(cmd_run, ++num));
 }
@@ -79,6 +80,7 @@ int		in_env(void)
 	i = 0;
 	while (environ[i])
 		ft_putstr(environ[i++]);
+	return (1);
 }
 
 int		is_builtin(char *cmd, char **cmd_run)
@@ -90,7 +92,7 @@ int		is_builtin(char *cmd, char **cmd_run)
 	else if (!ft_strcmp(cmd, "cd"))
 		return(in_cd(cmd_run));
 	else if (!ft_strcmp(cmd, "setenv"))
-		return(in_setenv(cmd_run, 0, NULL));
+		return(in_setenv(cmd_run[1], 0, NULL));
 	else if (!ft_strcmp(cmd, "unsetenv"))
 		return(in_unsetenv(cmd_run, 1));
 	else if (!ft_strcmp(cmd, "env"))

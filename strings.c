@@ -1,31 +1,27 @@
 #include "minishft.h"
 
-char	*search_obj(char *env_path, char *needle, int *next, int *l)
+char	*search_obj(char **path, char *needle, int *next, int *l)
 {
-	char	*path;
 	char	*bin_p;
 
-	if (!(path = split_count(env_path, ':', l)))
-		return (NULL);
 	while (path[*next])
 	{
-		if (!(bin_p = ft_strjoin(path[*next], needle)) && 
-			!err_msg(1, NULL) && !ft_strdel(&path))
+		if (!(bin_p = ft_strjoin(path[*next], needle)) &&
+			!err_msg(1, NULL))
 			return (NULL);
-		if (!access(bin_p, F_OK) && !ft_strdl(&path))
+		if (!access(bin_p, F_OK))
 			return (bin_p);
 		ft_strdel(&bin_p);
-		(*next)++;
+		++(*next);
 	}
-	// if path's dir is not ended and malloc error and it's parent
-	//    or PATH is empty for bin and it;s parent
-	ft_strdl(&path);
-	if ((l[1] == 0 || l[1] == -1) && !err_msg(2, bin_p) && !ft_strdel(&bin_p))
+	//  PATH is empty for bin and it;s parent
+	if ((l[1] == 0 || l[1] == -1) && !err_msg(2, needle)) // ? why l[1] == -1 ?
 		l[1] = -1;
 	else
 	{
-		path = search_obj(env_path, needle, 0, 0);
-		path == NULL ? err_msg(4, "couldn't malloc cmd name") : err_msg(4, path);
+		bin_p = search_obj(path, needle, 0, l);
+        bin_p == NULL ? err_msg(4, "couldn't malloc cmd name") : err_msg(4, bin_p);
+		ft_strdel(&bin_p);
 		exit(1);
 	}
 	return (NULL);
@@ -55,24 +51,24 @@ int		replace_string(char **to_replace, char *var, int st, int l)
 {
 	char	*str;
 	int		i;
-	int		dl;
+	size_t	dl;
 
-	i = 0;
 	if (var != NULL)
 		dl = ft_strlen(var) + ft_strlen(*to_replace) - l;
 	else
 		dl = ft_strlen(*to_replace) - l;
 	if ((str = ft_strnew(dl)) == NULL)
 		return (-1);
-	while (*to_replace[i] < st)
-		str[i] = to_replace[i++];
+    i = -1;
+    while (*to_replace[++i] < st)
+		str[i] = *to_replace[i];
 	dl = 0;
 	if (var != NULL)
 		while (dl < ft_strlen(var))
 			str[i++] = var[dl++];
 	dl = st + l;
 	while (*to_replace[dl])
-		str[i++] = to_replace[dl++];
+		str[i++] = *to_replace[dl++];
 	ft_strdel(to_replace);
 	*to_replace = str;
 	return (0);

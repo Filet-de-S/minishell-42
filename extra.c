@@ -29,8 +29,8 @@ int		ft_get_env(char *needle, int i)
 	err = 0;
 	while (environ[++i])
 		;
-	(needle != NULL) ? i++ : (i = i);
-	if (!(tmp = (char**)malloc(sizeof(char*) * i)) && !err_msg(1, NULL))
+	(needle != NULL) ? i++ : i;
+	if (!(tmp = (char**)malloc(sizeof(char*) * (i + 1))) && !err_msg(1, NULL))
 		err = -1;
 	else
 	{
@@ -41,21 +41,9 @@ int		ft_get_env(char *needle, int i)
 		if (err != -1 && needle && !(tmp[i++] = ft_strdup(needle)))
 			err = -1;
 	}
-	(err == -1) ? ft_strdl(tmp) : (tmp[i] = 0);
-	if (err == -1)
+	if (err == -1 && !ft_strdl(tmp))
 		return (-1);
+    tmp[i] = 0;
 	environ = tmp;
 	return (0);
-}
-
-char	*split_count(char *env, char needle, int **last)
-{
-	char *path;
-
-	if (!(path = ft_strsplit(env, ':')) && !err_msg(1, NULL))
-		return (NULL);
-	if (*last[0] != 0)
-		while (path[++(*last[0])])
-			;
-	return (path);
 }

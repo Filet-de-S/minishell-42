@@ -4,16 +4,7 @@
 #include <unistd.h>
 #include <pwd.h>
 
-void f(int *i)
-{
-    i[0] = 3;
-    i[1] = 0;
-}
+int main() {
+    write(2, "Cannot allocate memory\n", 23);
 
-int	main() {
-	int i[2];
-    i[0] = 1;
-	i[1] = 2;
-	f(i);
-	printf("i[0] = %d\n i[1] = %d\n", i[0], i[1]);
 }
