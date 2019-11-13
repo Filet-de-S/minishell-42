@@ -1,6 +1,6 @@
 #include "minishft.h"
 
-char*	child_prepare(char **cmd_run, char *path_env, int **last, int *next)
+char    *child_prepare(char **cmd_run, char *path_env, int *last, int *next)
 {
 
 	char *cmd_path;
@@ -10,13 +10,13 @@ char*	child_prepare(char **cmd_run, char *path_env, int **last, int *next)
 		if (access((cmd_path = cmd_run[0]), F_OK) && !err_msg(3, cmd_path))
 			return (NULL);
 	}
-	else if ((cmd_path = search_obj(path_env, cmd_run[0], &next, &last)) == NULL)
+	else if ((cmd_path = search_obj(path_env, cmd_run[0], next, last)) == NULL)
 		return (NULL);
-	*last[1]++;
+	last[1]++;
 	return (cmd_path);
 }
 
-int		child_action(char *path_env, char **cmd_run, int **last, int next)
+int		child_action(char *path_env, char **cmd_run, int *last, int next)
 {
 	pid_t	pid;
     char    *cmd_path;
@@ -28,11 +28,12 @@ int		child_action(char *path_env, char **cmd_run, int **last, int next)
 	if ((cmd_path = child_prepare(cmd_run, path_env, last, &next)) == NULL)
 		return (-1);
 	pid = fork();
+	// !!! free cmd_path !!!!!
 	if (pid == 0 && execve(cmd_path, cmd_run, environ)) //if child
 	{
-		if (*last[0] == -1) // if bin is not from search_obj
+		if (last[0] == -1) // if bin is not from search_obj
 			err_msg(4, cmd_path);
-		else if (*last[0] == next)
+		else if (last[0] == next)
 			(cmd_path = search_obj(path_env, cmd_run[0], 0, 0)) == NULL ? 
 				err_msg(4, "couldn't malloc cmd name") : err_msg(4, cmd_path);
 		else// if (next != last && last != -1)
@@ -50,12 +51,10 @@ int		exec_sh(char **to_run, int j)
 {
 	char	**cmd_run;
 	int		i;
-	int		status;
 	char 	*path_env;
 	int		last[2];
 
 	i = -1;
-	cmd_run = NULL;
 	while(to_run[++i])
 	{
 		last[0] = -1;
@@ -71,26 +70,26 @@ int		exec_sh(char **to_run, int j)
 			return (-1); // no path (no env), (2) doesn't start with '/', (3) file is not in this dir 
 		//run cmd with all staff
 		if ((j = child_action(path_env, cmd_run, last, 0)) == -1 && !ft_strdl(cmd_run) &&
-			!ft_strdl(path_env))
+			!ft_strdel(&path_env))
 			return (1);
 		ft_strdl(cmd_run);
-		ft_strdl(path_env);
+		ft_strdel(&path_env);
 		if (j == -5)
 			return (-5);
 	}
 	return (1);
 }
 
-int		main(int ac, char **av)
+int		main(void)
 {
 	int		status;
 	char	*to_parse;
 	char	**to_run;
-	
+
 	status = 1;
 	to_parse = NULL;
 	to_run = NULL;
-	if (get_env(NULL, 0) == -1)
+	if (ft_get_env(NULL, 0) == -1)
 		exit(1);
 	while (status != -5)
 	{
@@ -104,7 +103,7 @@ int		main(int ac, char **av)
 		else
 			err_msg(1, NULL);
 		ft_strdl(to_run);
-		ft_strdel(to_parse);
+		ft_strdel(&to_parse);
 	}
 	//SIGNAL CATCH
 	exit(1);

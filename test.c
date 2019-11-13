@@ -4,8 +4,16 @@
 #include <unistd.h>
 #include <pwd.h>
 
+void f(int *i)
+{
+    i[0] = 3;
+    i[1] = 0;
+}
+
 int	main() {
-	int i;
-	if (opendir("/Users/kkatelyn/minishell/libft") == NULL)
-		printf("OK");
+	int i[2];
+    i[0] = 1;
+	i[1] = 2;
+	f(i);
+	printf("i[0] = %d\n i[1] = %d\n", i[0], i[1]);
 }

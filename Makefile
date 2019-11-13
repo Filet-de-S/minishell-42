@@ -1,24 +1,24 @@
 NAME = minishell
 
-CORE = main.c, string.c
+CORE = main.c strings.c exp.c extra.c built_ins.c built_in_cd_exit.c
 
-CORE = $(addprefix core/, CORE:.c=.o)
+OBJ = $(addprefix obj/, $(CORE:.c=.o))
 
 all: $(NAME)
 $(NAME): libft objdir $(OBJ)
-	@gcc -g -L libft -lft obj/$(OBJ) -o $(NAME)
+	@gcc -g -L libft -lft $(OBJ) -o $(NAME)
 	@echo "Minishell is ready to use"
 
-%.o: %.c
-	@gcc -Wall -Wextra -Werror -g -I libft/includes -I includes -c $< -o obj/$@
+obj/%.o: %.c
+	@gcc -Wall -Wextra -Werror -g -I libft/includes -I includes -c $< -o $@
 	@echo "new obj created: $@"
 
 objdir:
-	[ -d obj ] || mkdir obj
+	@[ -d obj ] || mkdir obj
 
 libft:
 	@git submodule init
-    @git submodule update
+	@git submodule update
 	@$(MAKE) -C libft
 	@echo "libft is compiled!"
 

@@ -1,6 +1,6 @@
 #include "minishft.h"
 
-char	*search_obj(char *env_path, char *needle, int *next, int **l)
+char	*search_obj(char *env_path, char *needle, int *next, int *l)
 {
 	char	*path;
 	char	*bin_p;
@@ -20,8 +20,8 @@ char	*search_obj(char *env_path, char *needle, int *next, int **l)
 	// if path's dir is not ended and malloc error and it's parent
 	//    or PATH is empty for bin and it;s parent
 	ft_strdl(&path);
-	if ((*l[1] == 0 || *l[1] == -1) && !err_msg(2, bin_p) && !ft_strdel(&bin_p))
-		*l[1] = -1;
+	if ((l[1] == 0 || l[1] == -1) && !err_msg(2, bin_p) && !ft_strdel(&bin_p))
+		l[1] = -1;
 	else
 	{
 		path = search_obj(env_path, needle, 0, 0);

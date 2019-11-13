@@ -20,7 +20,7 @@ int		err_msg(int st, char *info)
 	return (0);
 }
 
-int		get_env(char *needle, int i)
+int		ft_get_env(char *needle, int i)
 {
 	char 	**tmp;
 	int		err;
