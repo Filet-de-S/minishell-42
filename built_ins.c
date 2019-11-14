@@ -46,7 +46,7 @@ int		in_setenv(char *cmd_run, int i, char *needle)
 		while (environ[++i])
 			if ((needle = ft_strstr(environ[i], tmp)) != NULL)
 				break;
-		free(&environ[i]);
+		free(environ[i]);
 		if ((environ[i] = ft_strdup(cmd_run)) == NULL)
 			return (-1);
 	}
@@ -79,7 +79,7 @@ int		in_env(void)
 
 	i = 0;
 	while (environ[i])
-		ft_putstr(environ[i++]);
+		ft_putendl(environ[i++]);
 	return (1);
 }
 

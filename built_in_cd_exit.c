@@ -2,6 +2,7 @@
 
 int 	in_exit()
 {
+	ft_putstr("exit\n");
 	return (-5);
 }
 

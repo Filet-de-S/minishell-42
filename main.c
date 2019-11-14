@@ -26,7 +26,7 @@ int		child_action(char **path_env, char **cmd_run, int *last, int next)
     char    *cmd_path;
 
 	//run if built-in
-	if ((pid = is_builtin(cmd_run[0], cmd_run)) >= -1)
+	if ((pid = is_builtin(cmd_run[0], cmd_run)) != -2)
 		return ((int)pid);
     //search bin
 	if ((cmd_path = child_prepare(cmd_run, path_env, last, &next)) == NULL)
@@ -53,7 +53,7 @@ int		child_action(char **path_env, char **cmd_run, int *last, int next)
     return (1);
 }
 
-int		exec_sh(char **to_run, int j)
+int		exec_sh(char **to_run, int j, char *env)
 {
 	char	**cmd_run;
 	int		i;
@@ -71,10 +71,10 @@ int		exec_sh(char **to_run, int j)
 		if ((cmd_run = ft_strsplit(to_run[i], ' ')) == NULL && !err_msg(1, NULL))
 			return(-1);
 		//get path of objBIN
-		if ((*path_env = env_value("PATH")) == NULL && !ft_strdl(cmd_run) &&
+		if ((env = env_value("PATH")) == NULL && !ft_strdl(cmd_run) &&
 			access(cmd_run[0], F_OK) && !err_msg(3, "env"))
 			return (-1); // no path (no env), (2) doesn't start with '/', (3) file is not in this dir
-		if ((path_env = complete_path(*path_env)) == NULL && !ft_strdl(cmd_run))
+		if ((path_env = complete_path(env)) == NULL && !ft_strdl(cmd_run))
             return (-1);
 		// run cmd with all staff
 		if ((j = child_action(path_env, cmd_run, last, 0)) == -1 && !ft_strdl(cmd_run) &&
@@ -106,7 +106,7 @@ int		main(void)
 			continue;
 		//split cmds by `;` and return 2d array
 		if ((to_run = ft_strsplit(to_parse, ';')) != NULL)
-			status = exec_sh(to_run, 0); //and exec cmd one by one
+			status = exec_sh(to_run, 0, NULL); //and exec cmd one by one
 		else
 			err_msg(1, NULL);
 		ft_strdl(to_run);
