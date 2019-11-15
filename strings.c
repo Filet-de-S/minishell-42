@@ -27,16 +27,17 @@ char	*search_obj(char **path, char *needle, int *next, int *l)
 	return (NULL);
 }
 
-char	*env_value(char *needle)
+char	*env_value(char *igla)
 {
 	size_t	i;
 	char	*path;
 
 	i = -1;
-	if (needle == NULL)
+	if (igla == NULL)
 		return (NULL);
-	while(environ[++i])
-		if ((path = ft_strstr(environ[i], needle)) != NULL)
+	while (environ[++i])
+		if (environ[i][0] == igla[0] && (path = ft_strstr(environ[i], igla)) != NULL
+		 && !ft_strncmp(path, igla, ft_strlen(igla)))
 			break;
 	if (environ[i] == 0 || !path)
 		return (NULL);
@@ -60,16 +61,16 @@ int		replace_string(char **to_replace, char *var, int st, int l)
 	if ((str = ft_strnew(dl)) == NULL)
 		return (-1);
     i = -1;
-    while (*to_replace[++i] < st)
-		str[i] = *to_replace[i];
+    while (++i < st)
+		str[i] = (*to_replace)[i];
 	dl = 0;
 	if (var != NULL)
-		while (dl < ft_strlen(var))
+		while (var[dl])
 			str[i++] = var[dl++];
 	dl = st + l;
-	while (*to_replace[dl])
-		str[i++] = *to_replace[dl++];
-	ft_strdel(to_replace);
+	while ((*to_replace)[dl])
+		str[i++] = (*to_replace)[dl++];
+	ft_strdel(&(*to_replace));
 	*to_replace = str;
 	return (0);
 }

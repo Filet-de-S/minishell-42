@@ -5,7 +5,7 @@ int		in_echo(char **cmd_run)
 	int		i;
 
 	i = 1;
-	if (!ft_strcmp("-e", cmd_run[1]))
+	if (cmd_run[1] && !ft_strcmp("-e", cmd_run[1]))
 	{
 		while (cmd_run[++i])
 		{
@@ -37,14 +37,14 @@ int		in_setenv(char *cmd_run, int i, char *needle)
 		return (-1);
 	if ((needle = env_value(tmp)) == NULL)
 	{
-		if (ft_get_env(needle, 0) == -1)
+		if (ft_get_env(cmd_run, 0, NULL, 0) == -1)
 			return (-1);
 	}
 	else
 	{
 		i = -1;
 		while (environ[++i])
-			if ((needle = ft_strstr(environ[i], tmp)) != NULL)
+			if (!ft_strncmp(environ[i], tmp, ft_strlen(tmp)))
 				break;
 		free(environ[i]);
 		if ((environ[i] = ft_strdup(cmd_run)) == NULL)
@@ -55,21 +55,26 @@ int		in_setenv(char *cmd_run, int i, char *needle)
 
 int		in_unsetenv(char **cmd_run, int num)
 {
-	char	*tofree;
 	int		i;
 
+	//num for many args: unsetenv USER OLDPWD ...
 	if (!cmd_run[num])
 		return (1);
 	i = -1;
 	while (environ[++i])
-		if ((tofree = ft_strstr(environ[i], cmd_run[num])) != NULL)
+    {
+	    if (environ[i][0] != cmd_run[num][0])
+            continue;
+		if (!ft_strncmp(cmd_run[num], environ[i], ft_strlen(cmd_run[num])))
 			break;
-	while (environ[i])
-	{
-		ft_strdel(&environ[i]);
-		environ[i] = environ[i + 1];
-		i++;
-	}
+    }
+	if (environ[i])
+    {
+        ft_strdel(&environ[i]);
+        environ[i] = environ[i + 1];
+        while (environ[++i])
+            environ[i] = environ[i + 1];
+    }
 	return (in_unsetenv(cmd_run, ++num));
 }
 

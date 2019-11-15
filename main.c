@@ -65,8 +65,8 @@ int		exec_sh(char **to_run, int j, char *env)
 	{
 		last[0] = -1;
 		last[1] = 0;
-		//if (replace_exp(to_run[i]) == -1)
-		//	return (-1);
+		if (replace_exp(&to_run[i]) == -1)
+			return (-1);
 		//split cmd and args by ` `
 		if ((cmd_run = ft_strsplit(to_run[i], ' ')) == NULL && !err_msg(1, NULL))
 			return(-1);
@@ -96,7 +96,7 @@ int		main(void)
 
 	status = 1;
 	to_run = NULL;
-	if (ft_get_env(NULL, 0) == -1)
+	if (ft_get_env(NULL, 0, NULL, 0) == -1)
 		exit(1);
 	while (status != -5)
 	{

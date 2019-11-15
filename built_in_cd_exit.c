@@ -42,7 +42,7 @@ int		real_cd(char *path)
 	{
 		if ((err = ft_strjoin("msh: cd: ", path)) == NULL)
 			return (-1);
-		if ((tmp = ft_strjoin(err, "undefiend problem")) == NULL && !ft_strdel(&err))
+		if ((tmp = ft_strjoin(err, "can't chdir")) == NULL && !ft_strdel(&err))
 			return (-1);
 		ft_putendl_fd(tmp, 2);
 		ft_strdel(&err);

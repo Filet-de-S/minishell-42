@@ -20,13 +20,11 @@ int		err_msg(int st, char *info)
 	return (0);
 }
 
-int		ft_get_env(char *needle, int i)
+int		ft_get_env(char *needle, int i, char **tmp, int err)
 {
-	char 	**tmp;
-	int		err;
+	static int  fl;
 	
 	i = -1;
-	err = 0;
 	while (environ[++i])
 		;
 	(needle != NULL) ? i++ : i;
@@ -44,6 +42,8 @@ int		ft_get_env(char *needle, int i)
 	if (err == -1 && !ft_strdl(tmp))
 		return (-1);
     tmp[i] = 0;
-	environ = tmp;
+    if (fl++ != 0)
+        ft_strdl(environ);
+    environ = tmp;
 	return (0);
 }
