@@ -16,10 +16,10 @@ int		in_echo(char **cmd_run)
 	else
 	{
 		while (cmd_run[i])
-			{
+		{
 			ft_putstr(cmd_run[i++]);
 			write(1, " ", 1);
-			}
+		}
 		write(1, "\n", 1);
 	}
 	return(1);
@@ -33,7 +33,7 @@ int		in_setenv(char *cmd_run, int i, char *needle)
 	ft_bzero(&tmp, 80);
 	while (cmd_run[++i] && cmd_run[i] != '=')
 		tmp[i] = cmd_run[i];
-	if (cmd_run[i] != '=')
+	if ((tmp[i] = cmd_run[i]) != '=')
 		return (-1);
 	if ((needle = env_value(tmp)) == NULL)
 	{
@@ -56,16 +56,21 @@ int		in_setenv(char *cmd_run, int i, char *needle)
 int		in_unsetenv(char **cmd_run, int num)
 {
 	int		i;
+    char    tmp[80];
 
 	//num for many args: unsetenv USER OLDPWD ...
 	if (!cmd_run[num])
 		return (1);
 	i = -1;
+	while (cmd_run[num][++i])
+	    tmp[i] = cmd_run[num][i];
+	ft_strcpy(&tmp[i], "=\0"); //could be segf if i > 80
+	i = -1;
 	while (environ[++i])
     {
 	    if (environ[i][0] != cmd_run[num][0])
             continue;
-		if (!ft_strncmp(cmd_run[num], environ[i], ft_strlen(cmd_run[num])))
+		if (!ft_strncmp(tmp, environ[i], ft_strlen(tmp)))
 			break;
     }
 	if (environ[i])

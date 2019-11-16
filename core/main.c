@@ -70,6 +70,8 @@ int		exec_sh(char **to_run, int j, char *env)
 		//split cmd and args by ` `
 		if ((cmd_run = ft_strsplit(to_run[i], ' ')) == NULL && !err_msg(1, NULL))
 			return(-1);
+		else if (!cmd_run[0] && !ft_strdl(cmd_run))
+            return (1);
 		//get path of objBIN
 		if ((env = env_value("PATH")) == NULL && !ft_strdl(cmd_run) &&
 			access(cmd_run[0], F_OK) && !err_msg(3, "env"))

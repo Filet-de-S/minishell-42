@@ -16,11 +16,16 @@ void    func(char **test) {
 }
 
 int main() {
-    char **test = (char**)malloc(sizeof(char*) * 2);
-    test[1] = 0;
-    test[0] = strdup("koniawk");
-    printf("1 test[0] %s\n", test[0]);
-    func(&test[0]);
-    //printf("2 test[1] %s\n", test[1]);
-    printf("2 test[0] %s\n", test[0]);
+    char a[80] = {"asd"};
+    strcpy(&a[3], "end\0");
+    printf("%s\n", a);
+
+
+//    char **test = (char**)malloc(sizeof(char*) * 2);
+//    test[1] = 0;
+//    test[0] = strdup("koniawk");
+//    printf("1 test[0] %s\n", test[0]);
+//    func(&test[0]);
+//    //printf("2 test[1] %s\n", test[1]);
+//    printf("2 test[0] %s\n", test[0]);
  }

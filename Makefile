@@ -1,15 +1,17 @@
 NAME = minishell
 
-CORE = main.c strings.c exp.c extra.c built_ins.c built_in_cd_exit.c
+CORE = main.c
+MOD = strings.c exp.c extra.c built_ins.c built_in_cd_exit.c
 
-OBJ = $(addprefix obj/, $(CORE:.c=.o))
+OBJ = $(addprefix core/, $(CORE:.c=.o)) \
+	  $(addprefix mod/, $(MOD:.c=.o))
 
 all: $(NAME)
 $(NAME): libft objdir $(OBJ)
 	@gcc -g -L libft/ -lft $(OBJ) -o $(NAME)
 	@echo "Minishell is ready to use"
 
-obj/%.o: %.c
+%.o: %.c
 	@gcc -Wall -Wextra -Werror -g -I libft/includes -I includes -c $< -o $@
 	@echo "new obj created: $@"
 
