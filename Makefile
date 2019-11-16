@@ -20,7 +20,6 @@ objdir:
 	@[ -d obj/mod ] || mkdir obj/mod
 
 libft:
-	@git submodule add https://github.com/Filet-de-S/libft.git
 	@git submodule init
 	@git submodule update
 	@make -C libft
