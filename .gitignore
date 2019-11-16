@@ -3,6 +3,6 @@
 cmake-build-debug/
 *.o
 *.out
-*.dSYM
+*.dSYM/
 minishell
 obj
