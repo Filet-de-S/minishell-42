@@ -19,7 +19,8 @@ char	*search_obj(char **path, char *needle, int *next, int *l)
 		l[1] = -1;
 	else
 	{
-		bin_p = search_obj(path, needle, 0, l);
+        *next = 0;
+        bin_p = search_obj(path, needle, next, l);
         bin_p == NULL ? err_msg(4, "couldn't malloc cmd name") : err_msg(4, bin_p);
 		ft_strdel(&bin_p);
 		exit(1);

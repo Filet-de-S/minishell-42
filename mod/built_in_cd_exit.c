@@ -3,7 +3,7 @@
 int 	in_exit()
 {
 	ft_putstr("exit\n");
-	return (-5);
+	exit(1);
 }
 
 int		cool_cd(char **tmp)

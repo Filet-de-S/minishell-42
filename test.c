@@ -16,9 +16,10 @@ void    func(char **test) {
 }
 
 int main() {
-    char a[80] = {"asd"};
-    strcpy(&a[3], "end\0");
-    printf("%s\n", a);
+    char a[80];
+    bzero(a, 80);
+    strcpy(a, "\033[1;35masd");
+    printf("%s\n, %d", a, strlen(a));
 
 
 //    char **test = (char**)malloc(sizeof(char*) * 2);

@@ -73,9 +73,9 @@ add_executable(minishell
         libft/ft_toupper.c
         libft/get_next_char.c
         libft/get_next_line.c
-        built_in_cd_exit.c
-        built_ins.c
-        exp.c
-        extra.c
-        main.c
-        strings.c)
+        mod/built_in_cd_exit.c
+        mod/built_ins.c
+        mod/exp.c
+        mod/extra.c
+        core/main.c
+        mod/strings.c)
