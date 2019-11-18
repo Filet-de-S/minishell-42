@@ -99,8 +99,11 @@ int		is_builtin(char *cmd, char **cmd_run)
 
 	if (cmd[0] == '/' || cmd[0] == '.')
     {
-	    is_dir // write is dir
-		return (-2);
+        if (lstat(cmd, &buf) && !err_msg(3, cmd))
+            return (-1);
+        if (S_ISDIR(buf.st_mode) && !err_msg(6, cmd))
+            return (-1);
+        return (-2);
     }
 	if (!ft_strcmp(cmd, "echo"))
 		return (in_echo(cmd_run));

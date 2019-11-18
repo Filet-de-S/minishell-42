@@ -14,6 +14,8 @@ int		err_msg(int st, char *info)
         	write(2, ": No such file or directory\n", 28);
 		else if (st == 4)
 			write(2, ": Permission denied\n", 20);
+		else if (st == 6)
+		    write(2, ": is a directory\n", 17);
 		else
 			write(2, ": Can't fork\n", 13);
 	}
