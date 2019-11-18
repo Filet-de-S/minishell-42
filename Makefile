@@ -21,8 +21,9 @@ objdir:
 
 libft:
 	@git submodule init
-	@git submodule update
+	@git submodule update --remote --merge
 	@make -C libft
+	@#git submodule update
 
 .PHONY: libft
 

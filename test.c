@@ -30,3 +30,4 @@ int main() {
 //    //printf("2 test[1] %s\n", test[1]);
 //    printf("2 test[0] %s\n", test[0]);
  }
+

@@ -3,6 +3,8 @@
 # include "libft.h"
 # include <dirent.h>
 # include <pwd.h>
+# include <sys/stat.h>
+
 
 extern char **environ;
 
