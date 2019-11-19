@@ -19,9 +19,9 @@ char	*search_obj(char **path, char *needle, int *next, int *l)
 		l[1] = -1;
 	else
 	{
-        *next = 0;
-        bin_p = search_obj(path, needle, next, l);
-        bin_p == NULL ? err_msg(4, "couldn't malloc cmd name") : err_msg(4, bin_p);
+		*next = 0;
+		bin_p = search_obj(path, needle, next, l);
+		bin_p == NULL ? err_msg(4, "can't malloc cmd name") : err_msg(4, bin_p);
 		ft_strdel(&bin_p);
 		exit(1);
 	}
@@ -30,26 +30,27 @@ char	*search_obj(char **path, char *needle, int *next, int *l)
 
 char	*env_value(char *igla)
 {
-	int 	i;
-	int     j;
-    char    *tmp;
+	int		i;
+	int		j;
+	char	*tmp;
 
 	i = -1;
 	if (igla == NULL)
 		return (NULL);
 	tmp = igla;
-	if (igla[ft_strlen(igla) - 1] != '=' && !(tmp = ft_strjoin(igla, "=")) && !err_msg(1, NULL))
-	    return (NULL);
-    j = ft_strlen(tmp);
+	if (igla[ft_strlen(igla) - 1] != '=' && !(tmp = ft_strjoin(igla, "="))
+		&& !err_msg(1, NULL))
+		return (NULL);
+	j = ft_strlen(tmp);
 	while (environ[++i])
 		if (environ[i][0] == tmp[0] && !ft_strncmp(environ[i], tmp, j))
-			break;
+			break ;
 	if (environ[i] == 0 || !(environ[i] + j))
 		return (NULL);
-	return(environ[i] + j);
+	return (environ[i] + j);
 }
 
-int		replace_string(char **to_replace, char *var, int st, int l)
+int		repl_string(char **to_replace, char *var, int st, int l)
 {
 	char	*str;
 	int		i;
@@ -61,8 +62,8 @@ int		replace_string(char **to_replace, char *var, int st, int l)
 		dl = ft_strlen(*to_replace) - l;
 	if ((str = ft_strnew(dl)) == NULL)
 		return (-1);
-    i = -1;
-    while (++i < st)
+	i = -1;
+	while (++i < st)
 		str[i] = (*to_replace)[i];
 	dl = 0;
 	if (var != NULL)
@@ -74,30 +75,28 @@ int		replace_string(char **to_replace, char *var, int st, int l)
 	ft_strdel(&(*to_replace));
 	*to_replace = str;
 	if (!var)
-        return (-2);
+		return (-2);
 	return (0);
 }
 
-char    **complete_path(void)
+char	**complete_path(void)
 {
-    char **p;
-    char *tmp;
-    int  i;
+	char	**p;
+	char	*tmp;
+	int		i;
 
-    if ((tmp = env_value("PATH=")) == NULL)
-        return (NULL); // no path (no env), (2) doesn't start with '/', (3) file is not in this dir
-//        && access(cmd_run[0], F_OK) &&
-//        !err_msg(3, cmd_run[0]))
-    if ((p = ft_strsplit(tmp, ':')) == NULL && !err_msg(1, NULL))
-        return (NULL);
-    i = 0;
-    while (p[i])
-    {
-        if ((tmp = ft_strjoin(p[i], "/")) == NULL && !err_msg(1, NULL) &&
-            !ft_strdl(p))
-            return (NULL);
-        ft_strdel(&p[i]);
-        p[i++] = tmp;
-    }
-    return (p);
+	if ((tmp = env_value("PATH=")) == NULL)
+		return (NULL);
+	if ((p = ft_strsplit(tmp, ':')) == NULL && !err_msg(1, NULL))
+		return (NULL);
+	i = 0;
+	while (p[i])
+	{
+		if ((tmp = ft_strjoin(p[i], "/")) == NULL && !err_msg(1, NULL) &&
+			!ft_strdl(p))
+			return (NULL);
+		ft_strdel(&p[i]);
+		p[i++] = tmp;
+	}
+	return (p);
 }

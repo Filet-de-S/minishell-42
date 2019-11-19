@@ -11,11 +11,11 @@ int		err_msg(int st, char *info)
 		if (st == 2)
 			write(2, ": Command not found\n", 20);
 		else if (st == 3)
-        	write(2, ": No such file or directory\n", 28);
+			write(2, ": No such file or directory\n", 28);
 		else if (st == 4)
 			write(2, ": Permission denied\n", 20);
 		else if (st == 6)
-		    write(2, ": is a directory\n", 17);
+			write(2, ": is a directory\n", 17);
 		else
 			write(2, ": Can't fork\n", 13);
 	}
@@ -24,8 +24,8 @@ int		err_msg(int st, char *info)
 
 int		ft_get_env(char *needle, int i, char **tmp, int err)
 {
-	static int  fl;
-	
+	static int fl;
+
 	i = -1;
 	while (environ[++i])
 		;
@@ -36,16 +36,16 @@ int		ft_get_env(char *needle, int i, char **tmp, int err)
 	{
 		i = -1;
 		while (environ[++i])
-			if (!(tmp[i] = ft_strdup(environ[i])) && !err_msg(1, NULL) && (err = -1))
+			if (!(tmp[i] = ft_strdup(environ[i])) && !err_msg(1, NULL) && --err)
 				break;
 		if (err != -1 && needle && !(tmp[i++] = ft_strdup(needle)))
 			err = -1;
 	}
 	if (err == -1 && !ft_strdl(tmp))
 		return (-1);
-    tmp[i] = 0;
-    if (fl++ != 0)
-        ft_strdl(environ);
-    environ = tmp;
+	tmp[i] = 0;
+	if (fl++ != 0)
+		ft_strdl(environ);
+	environ = tmp;
 	return (0);
 }

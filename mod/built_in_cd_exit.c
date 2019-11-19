@@ -1,6 +1,6 @@
 #include "minishft.h"
 
-int 	in_exit()
+int		in_exit(void)
 {
 	ft_putstr("exit\n");
 	exit(1);
@@ -74,7 +74,7 @@ int		exec_cd(char *path)
 		return (-1);
 	}
 	closedir(dir);
-	return(real_cd(path));
+	return (real_cd(path));
 }
 
 int		in_cd(char **cmd_run)
@@ -87,7 +87,7 @@ int		in_cd(char **cmd_run)
 		if ((path = env_value("HOME=")) == NULL)
 		{
 			ft_putendl("msh: cd: HOME not set");
-			return(-1);
+			return (-1);
 		}
 	}
 	else if (!ft_strcmp(cmd_run[1], "-"))
@@ -95,7 +95,7 @@ int		in_cd(char **cmd_run)
 		if ((path = env_value("OLDPWD=")) == NULL)
 		{
 			ft_putendl("msh: cd: OLDPWD not set");
-			return(-1);
+			return (-1);
 		}
 	}
 	return (exec_cd(path));

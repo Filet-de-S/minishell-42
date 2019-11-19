@@ -22,12 +22,12 @@ int		in_echo(char **cmd_run)
 		}
 		write(1, "\n", 1);
 	}
-	return(1);
+	return (1);
 }
 
 int		in_setenv(char *cmd_run, int i, char *needle)
 {
-	char	tmp[80];
+	char tmp[80];
 
 	i = -1;
 	ft_bzero(&tmp, 80);
@@ -45,41 +45,41 @@ int		in_setenv(char *cmd_run, int i, char *needle)
 		i = -1;
 		while (environ[++i])
 			if (!ft_strncmp(environ[i], tmp, ft_strlen(tmp)))
-				break;
+				break ;
 		free(environ[i]);
 		if ((environ[i] = ft_strdup(cmd_run)) == NULL)
 			return (-1);
 	}
-	return(1);
+	return (1);
 }
 
+//num for many args: unsetenv USER OLDPWD ...
 int		in_unsetenv(char **cmd_run, int num)
 {
 	int		i;
-    char    tmp[80];
+	char	tmp[80];
 
-	//num for many args: unsetenv USER OLDPWD ...
 	if (!cmd_run[num])
 		return (1);
 	i = -1;
 	while (cmd_run[num][++i])
-	    tmp[i] = cmd_run[num][i];
+		tmp[i] = cmd_run[num][i];
 	ft_strcpy(&tmp[i], "=\0"); //could be segf if i > 80
 	i = -1;
 	while (environ[++i])
-    {
-	    if (environ[i][0] != cmd_run[num][0])
-            continue;
+	{
+		if (environ[i][0] != cmd_run[num][0])
+			continue;
 		if (!ft_strncmp(tmp, environ[i], ft_strlen(tmp)))
-			break;
-    }
+			break ;
+	}
 	if (environ[i])
-    {
-        ft_strdel(&environ[i]);
-        environ[i] = environ[i + 1];
-        while (environ[++i])
-            environ[i] = environ[i + 1];
-    }
+	{
+		ft_strdel(&environ[i]);
+		environ[i] = environ[i + 1];
+		while (environ[++i])
+			environ[i] = environ[i + 1];
+	}
 	return (in_unsetenv(cmd_run, ++num));
 }
 
@@ -95,35 +95,27 @@ int		in_env(void)
 
 int		is_builtin(char *cmd, char **cmd_run)
 {
-    struct stat	buf;
+	struct stat	buf;
 
 	if (cmd[0] == '/' || cmd[0] == '.')
-    {
-        if (lstat(cmd, &buf) && !err_msg(3, cmd))
-            return (-1);
-        if (S_ISDIR(buf.st_mode) && !err_msg(6, cmd))
-            return (-1);
-        return (-2);
-    }
+	{
+		if (lstat(cmd, &buf) && !err_msg(3, cmd))
+			return (-1);
+		if (S_ISDIR(buf.st_mode) && !err_msg(6, cmd))
+			return (-1);
+		return (-2);
+	}
 	if (!ft_strcmp(cmd, "echo"))
 		return (in_echo(cmd_run));
 	else if (!ft_strcmp(cmd, "cd"))
-		return(in_cd(cmd_run));
+		return (in_cd(cmd_run));
 	else if (!ft_strcmp(cmd, "setenv"))
-		return(in_setenv(cmd_run[1], 0, NULL));
+		return (in_setenv(cmd_run[1], 0, NULL));
 	else if (!ft_strcmp(cmd, "unsetenv"))
-		return(in_unsetenv(cmd_run, 1));
+		return (in_unsetenv(cmd_run, 1));
 	else if (!ft_strcmp(cmd, "env"))
-		return(in_env());
+		return (in_env());
 	else if (!ft_strcmp(cmd, "exit"))
-		return(in_exit());
+		return (in_exit());
 	return (-2); //no built-in
 }
-
-	//parse for $variable 
-	//echo "$PWD         '$PWD'"
-	///Users/kkatelyn         '/Users/kkatelyn'
-	// echo '$PWD'
-	// $PWD
-	// -n flag, that's it
-	

@@ -13,7 +13,7 @@ int     err_msg(int stat, char *info);
 char	*env_value(char *needle);
 int		is_builtin(char *cmd, char **cmd_run);
 int		replace_exp(char **to_parse);
-int		replace_string(char **to_replace, char *var, int st, int l);
+int		repl_string(char **to_replace, char *var, int st, int l);
 int		in_cd(char **cmd_run);
 int 	in_exit(void);
 int		in_setenv(char *cmd_run, int i, char *needle);
