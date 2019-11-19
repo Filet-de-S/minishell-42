@@ -17,9 +17,9 @@ int		dollar_exp(int *i, char **to_replace)
 	    return (-1);
 	value = env_value(var);
 	ft_strdel(&var);
-	if (replace_string(to_replace, value, t, j) == -1)
+	if ((*i = replace_string(to_replace, value, t, j)) == -1)
 		return (-1);
-	*i = t;
+	*i = (*i == -2) ? (t - 1) : t;
 	return (0);
 }
 
@@ -29,9 +29,9 @@ int		tilda_else(struct passwd *user, char **value, char **replace, char **var)
         *value = user->pw_dir;
     else
     {
-        if ((*replace)[0] == 'c' && (*replace)[1] == 'd' && (*replace[2]) == ' ')
+        if ((*replace)[0] == 'c' && (*replace)[1] == 'd' && (*replace)[2] == ' ')
         {
-            if (!(*value = ft_strjoin("cd: ", *var)) && !err_msg(1, NULL))
+            if (!(*value = ft_strjoin("cd: ~", *var)) && !err_msg(1, NULL))
                 ;
             else
                 err_msg(3, *value);
@@ -60,7 +60,7 @@ int		tilda_exp(int *i, char **replace, int j, int t)
 		return (-1);
 	if (j == 1)
 	{
-		if ((value = env_value("HOME")) == NULL)
+		if ((value = env_value("HOME=")) == NULL)
 		{
 			if ((user = getpwuid(geteuid())) != NULL)
 				value = user->pw_dir;

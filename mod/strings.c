@@ -30,23 +30,23 @@ char	*search_obj(char **path, char *needle, int *next, int *l)
 
 char	*env_value(char *igla)
 {
-	size_t	i;
-	char	*path;
+	int 	i;
+	int     j;
+    char    *tmp;
 
 	i = -1;
 	if (igla == NULL)
 		return (NULL);
+	tmp = igla;
+	if (igla[ft_strlen(igla) - 1] != '=' && !(tmp = ft_strjoin(igla, "=")) && !err_msg(1, NULL))
+	    return (NULL);
+    j = ft_strlen(tmp);
 	while (environ[++i])
-		if (environ[i][0] == igla[0] && (path = ft_strstr(environ[i], igla)) != NULL
-		 && !ft_strncmp(path, igla, ft_strlen(igla)))
+		if (environ[i][0] == tmp[0] && !ft_strncmp(environ[i], tmp, j))
 			break;
-	if (environ[i] == 0 || !path)
+	if (environ[i] == 0 || !(environ[i] + j))
 		return (NULL);
-	i = 0;
-	while (path[i] != '=')
-		i++;
-	i++;
-	return(&path[i]);
+	return(environ[i] + j);
 }
 
 int		replace_string(char **to_replace, char *var, int st, int l)
@@ -73,16 +73,22 @@ int		replace_string(char **to_replace, char *var, int st, int l)
 		str[i++] = (*to_replace)[dl++];
 	ft_strdel(&(*to_replace));
 	*to_replace = str;
+	if (!var)
+        return (-2);
 	return (0);
 }
 
-char    **complete_path(char *path)
+char    **complete_path(void)
 {
-    char    **p;
-    char    *tmp;
-    int     i;
+    char **p;
+    char *tmp;
+    int  i;
 
-    if ((p = ft_strsplit(path, ':')) == NULL && !err_msg(1, NULL))
+    if ((tmp = env_value("PATH=")) == NULL)
+        return (NULL); // no path (no env), (2) doesn't start with '/', (3) file is not in this dir
+//        && access(cmd_run[0], F_OK) &&
+//        !err_msg(3, cmd_run[0]))
+    if ((p = ft_strsplit(tmp, ':')) == NULL && !err_msg(1, NULL))
         return (NULL);
     i = 0;
     while (p[i])

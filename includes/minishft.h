@@ -18,7 +18,8 @@ int		in_cd(char **cmd_run);
 int 	in_exit(void);
 int		in_setenv(char *cmd_run, int i, char *needle);
 int		ft_get_env(char *needle, int i, char **tmp, int err);
-char    **complete_path(char *path);
+char    **complete_path(void);
+
 
 
 #endif

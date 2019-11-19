@@ -84,7 +84,7 @@ int		in_cd(char **cmd_run)
 	path = cmd_run[1];
 	if (!cmd_run[1])
 	{
-		if ((path = env_value("HOME")) == NULL)
+		if ((path = env_value("HOME=")) == NULL)
 		{
 			ft_putendl("msh: cd: HOME not set");
 			return(-1);
@@ -92,7 +92,7 @@ int		in_cd(char **cmd_run)
 	}
 	else if (!ft_strcmp(cmd_run[1], "-"))
 	{
-		if ((path = env_value("OLDPWD")) == NULL)
+		if ((path = env_value("OLDPWD=")) == NULL)
 		{
 			ft_putendl("msh: cd: OLDPWD not set");
 			return(-1);

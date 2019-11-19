@@ -5,7 +5,7 @@ int		in_echo(char **cmd_run)
 	int		i;
 
 	i = 1;
-	if (cmd_run[1] && !ft_strcmp("-e", cmd_run[1]))
+	if (cmd_run[1] && !ft_strcmp("-n", cmd_run[1]))
 	{
 		while (cmd_run[++i])
 		{
