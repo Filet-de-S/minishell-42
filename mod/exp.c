@@ -69,7 +69,7 @@ int		tilda_exp(int *i, char **rs, int j, int t)
 	}
 	else if ((tilda_else(user = NULL, &v, rs, &var)) == -1)
 		return (-1);
-	if (!ft_strdel(&var) && v && (j = repl_string(rs, v, t, j)) == -1 || j == 0)
+	if (!ft_strdel(&var) && v && ((j = repl_string(rs, v, t, j)) == -1 || j == 0))
 		return (j);
 	*i = t;
 	return (1);
@@ -87,6 +87,7 @@ int		 replace_exp(char **to_replace)
 			continue;
 		if ((*to_replace)[i] == '$' && dollar_exp(&i, to_replace) == -1)
 			return (-1);
+		i = (i < 0 ? 0 : i);
 		if ((*to_replace)[i] == '~' && tilda_exp(&i, to_replace, 0, i) == -1)
 			return (-1);
 	}

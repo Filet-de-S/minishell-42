@@ -82,8 +82,8 @@ int		exec_sh(char **to_run, int j, char **path_env, int i)
 	path_env = complete_path();
 	while(to_run[++i])
 	{
-		if ((l[0] = replace_prerun(path_env, &to_run, &cmd_run, i)) == -1
-			|| l[0] == 1)
+		if (((l[0] = replace_prerun(path_env, &to_run, &cmd_run, i)) == -1
+			|| l[0] == 1) && !ft_strdl(path_env))
 			return (l[0]);
 		else if (l[0] == 2)
 			continue;

@@ -45,6 +45,8 @@ char	*env_value(char *igla)
 	while (environ[++i])
 		if (environ[i][0] == tmp[0] && !ft_strncmp(environ[i], tmp, j))
 			break ;
+	if (ft_strcmp(igla, tmp))
+		ft_strdel(&tmp);
 	if (environ[i] == 0 || !(environ[i] + j))
 		return (NULL);
 	return (environ[i] + j);
