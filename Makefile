@@ -7,7 +7,7 @@ OBJ = $(addprefix obj/, $(addprefix core/, $(CORE:.c=.o)) $(addprefix mod/, $(MO
 
 all: $(NAME)
 
-$(NAME): libft/libft.a obj/ $(OBJ)
+$(NAME): libft obj/ $(OBJ)
 	@gcc -g -L libft/ -lft $(OBJ) -o ./$(NAME)
 
 obj/%.o: %.c
@@ -19,7 +19,7 @@ obj/:
 	@mkdir obj/core
 	@mkdir obj/mod
 
-libft/libft.a:
+libft:
 	@make -C libft
 
 .PHONY: libft

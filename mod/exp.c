@@ -90,6 +90,7 @@ int		 replace_exp(char **to_replace)
 		i = (i < 0 ? 0 : i);
 		if ((*to_replace)[i] == '~' && tilda_exp(&i, to_replace, 0, i) == -1)
 			return (-1);
-	}
+        i = (i < 0 ? 0 : i);
+    }
 	return (0);
 }
