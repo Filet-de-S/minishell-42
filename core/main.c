@@ -48,14 +48,14 @@ int		child_action(char **path_env, char **cmd_run, int *last, int next)
 	return (1);
 }
 
-int		replace_prerun(char **path_env, char ***to_run, char ***cmd_run, int i)
+int		replace_prerun(char **path_env, char **to_run, char ***cmd_run)
 {
 	int cond;
 
-	if (replace_exp(to_run[i]) == -1)
+	if (replace_exp(&(*to_run)) == -1)
 		return (-1);
-	//split cmd and args by ` `
-	if ((*cmd_run = ft_strsplit((*to_run)[i], ' ')) == NULL && !err_msg(1, NULL))
+	//split cmd and args by ` `, tabs etc
+	if ((*cmd_run = ft_strsplitwhites((*to_run))) == NULL && !err_msg(1, NULL))
 		return(-1);
 	else if (!((*cmd_run)[0]) && !ft_strdl(*cmd_run))
 		return (1);
@@ -66,7 +66,7 @@ int		replace_prerun(char **path_env, char ***to_run, char ***cmd_run, int i)
 			return (-1);
 		return (2);
 	}
-	if (!path_env && access((*cmd_run)[0], F_OK) && !err_msg(3, (*cmd_run)[0])
+	if (!path_env && access((*cmd_run)[0], F_OK) && !err_msg(2, (*cmd_run)[0])
 		&& !ft_strdl(*cmd_run))
 		return (-1);
 	return (3);
@@ -82,7 +82,7 @@ int		exec_sh(char **to_run, int j, char **path_env, int i)
 	path_env = complete_path();
 	while(to_run[++i])
 	{
-		if (((l[0] = replace_prerun(path_env, &to_run, &cmd_run, i)) == -1
+		if (((l[0] = replace_prerun(path_env, &to_run[i], &cmd_run)) == -1
 			|| l[0] == 1) && !ft_strdl(path_env))
 			return (l[0]);
 		else if (l[0] == 2)

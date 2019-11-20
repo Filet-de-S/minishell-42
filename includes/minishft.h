@@ -5,6 +5,8 @@
 # include <pwd.h>
 # include <sys/stat.h>
 
+#include <stdio.h>
+
 
 extern char **environ;
 

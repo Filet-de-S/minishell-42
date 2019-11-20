@@ -16,10 +16,10 @@ void    func(char **test) {
 }
 
 int main() {
-    char a[80];
-    bzero(a, 80);
-    strcpy(a, "\033[1;35masd");
-    printf("%s\n, %d", a, strlen(a));
+    struct stat	buf;
+
+        lstat("/Users/kkatelyn/minishell/perm1/a.out", &buf);
+        printf()
 
 
 //    char **test = (char**)malloc(sizeof(char*) * 2);

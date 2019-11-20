@@ -8,6 +8,8 @@ include_directories(libft/includes)
 
 add_executable(minishell
         includes/minishft.h
+        libft/is_whitespaces.c
+        libft/ft_strsplitwhites.c
         libft/includes/libft.h
         libft/ft_atoi.c
         libft/ft_bzero.c
@@ -78,4 +80,4 @@ add_executable(minishell
         mod/exp.c
         mod/extra.c
         core/main.c
-        mod/strings.c)
+        mod/strings.c libft/is_whitespaces.c)

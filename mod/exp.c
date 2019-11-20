@@ -54,10 +54,10 @@ int		tilda_exp(int *i, char **rs, int j, int t)
 
 	while ((*rs)[(*i)] != '\0' && ((*rs)[(*i)] != ' ' && (*rs)[(*i)++] != '/'))
 		j++;
-	v = NULL;
+	var = NULL;
 	if (j > 1 && (var = ft_strsub(*rs, t + 1, (size_t)j - 1)) == NULL)
 		return (-1);
-	if (!(var = 0) && j == 1)
+	if (!(v = 0) && j == 1)
 	{
 		if ((v = env_value("HOME=")) == NULL)
 		{

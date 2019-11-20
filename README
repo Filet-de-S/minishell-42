@@ -28,16 +28,21 @@ TOASK:
 	
 TODO:
 
-1)
+OK 1)
 cd ~realdir
 echo ~realdir ~wrongdir
 
-2)
+OK 2)
 /bin/ls -l		-a
 /bin/ls: illegal option --
 usage: ls [-ABCFGHLOPRSTUWabcdefghiklmnopqrstuwx1] [file ...]
 
-3) semicolon ; bug???????
+OK 3) semicolon ; bug???????
 
-4) PATH perm.denied
+4) PATH perm.denied: def lost in fork (?)
+
+OK 5) if PATH is NULL => "no command!" no such file or dir
+
+OK 6) empty input: " " " <tab>"
+6.1) >    echo
 
