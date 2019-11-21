@@ -36,14 +36,27 @@ int		child_action(char **path_env, char **cmd_run, int *last, int next)
 		else if (last[0] == next) //all bins are searched
 			(cmd_path = search_obj(path_env, cmd_run[0], 0, last)) == NULL ?
 				err_msg(4, "couldn't malloc cmd name") : err_msg(4, cmd_path);
-		else// if (next != last && last != -1)
-			child_action(path_env, cmd_run, last, ++next);
+		else {
+            last[2] = 1;// if (next != last && last != -1)
+            child_action(path_env, cmd_run, last, ++next);
+        }
 		exit(1);
 	}
 	else if (pid < 0) //if fork problem
 		err_msg(5, cmd_path);
-	else if(waitpid(pid, NULL, 0) == -1)// if parent
-		write(2, "msh: waitpid error *_*\n", 23);
+	else
+    {
+        if (last[2] == 1)
+        {
+            ft_strdl(path_env);
+	        printf("imchildPARENT\n");
+	        exit(1);
+        }
+	    else if(waitpid(pid, NULL, 0) == -1)
+	        write(2, "msh: waitpid error *_*\n", 23);
+    }
+   // if parent
+	    printf("im REAL\n");
 	ft_strdel(&cmd_path);
 	return (1);
 }
@@ -75,7 +88,7 @@ int		replace_prerun(char **path_env, char **to_run, char ***cmd_run)
 int		exec_sh(char **to_run, int j, char **path_env, int i)
 {
 	char	**cmd_run;
-	int		l[2];
+	int		l[3];
 
 	i = -1;
 	cmd_run = NULL;
@@ -89,6 +102,7 @@ int		exec_sh(char **to_run, int j, char **path_env, int i)
 			continue;
 		l[0] = -1;
 		l[1] = 0;
+		l[2] = 0;
 		// run cmd with all staff
 		if ((j = child_action(path_env, cmd_run, l, 0)) == -1 && !ft_strdl(cmd_run) &&
 			!ft_strdl(path_env))
