@@ -20,9 +20,9 @@ obj/:
 	@mkdir obj/mod
 
 libft:
+	@git submodule init
+	@git submodule update --remote --merge
 	@make -C libft
-
-.PHONY: libft
 
 clean:
 	@make -C libft clean
@@ -35,3 +35,6 @@ fclean: clean
 	@echo "msh–> full cleaned!"
 
 re: fclean all
+
+
+.PHONY: libft all clean fclean re
