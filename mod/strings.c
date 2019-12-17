@@ -1,5 +1,22 @@
 #include "minishft.h"
 
+char	*last_obj(char **path, char *needle, int *next)
+{
+    char *bin_p;
+
+    while (path[*next])
+    {
+        if (!(bin_p = ft_strjoin(path[*next], needle)) &&
+            !err_msg(1, NULL))
+            return (NULL);
+        if (!access(bin_p, F_OK)) // is wrong, because access checks for REAL, not effective USER !
+            return (bin_p);
+        ft_strdel(&bin_p);
+        ++(*next);
+    }
+    return (NULL);
+}
+
 char	*search_obj(char **path, char *needle, int *next, int *l)
 {
 	char	*bin_p;
@@ -9,18 +26,24 @@ char	*search_obj(char **path, char *needle, int *next, int *l)
 		if (!(bin_p = ft_strjoin(path[*next], needle)) &&
 			!err_msg(1, NULL))
 			return (NULL);
-		if (!access(bin_p, F_OK))
+		if (!access(bin_p, X_OK)) // is wrong, because access checks for REAL, not effective USER !
 			return (bin_p);
 		ft_strdel(&bin_p);
 		++(*next);
 	}
 	//  PATH is empty for bin and it;s parent
-	if ((l[1] == 0 || l[1] == -1) && !err_msg(2, needle)) // ? why l[1] == -1 ?
-		l[1] = -1;
+	if ((l[1] == 0 || l[1] == -1)) // && !err_msg(2, needle)) // ? why l[1] == -1 ?
+    {
+        *next = 0;
+        bin_p = last_obj(path, needle, next);
+        bin_p == NULL ? err_msg(2, needle) : err_msg(4, bin_p);
+        ft_strdel(&bin_p);
+        l[1] = -1;
+    }
 	else
 	{
 		*next = 0;
-		bin_p = search_obj(path, needle, next, l);
+		bin_p = last_obj(path, needle, next);
 		bin_p == NULL ? err_msg(4, "can't malloc cmd name") : err_msg(4, bin_p);
 		ft_strdel(&bin_p);
 		exit(1);

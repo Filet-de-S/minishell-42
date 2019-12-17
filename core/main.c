@@ -29,36 +29,23 @@ int		child_action(char **path_env, char **cmd_run, int *last, int next)
 	if ((cmd_path = child_prepare(cmd_run, path_env, last, &next)) == NULL)
 		return (-1);
 	pid = fork();
-	if (pid == 0 && execve(cmd_path, cmd_run, environ))
+	if (pid == 0 && execve(cmd_path, cmd_run, environ) && !ft_strdel(&cmd_path))
 	{
-		if (last[0] == -1)//if bin is not from search_obj
+        if (last[0] == -1)//if bin is not from search_obj
 			err_msg(4, cmd_path);
 		else if (last[0] == next) //all bins are searched
 			(cmd_path = search_obj(path_env, cmd_run[0], 0, last)) == NULL ?
 				err_msg(4, "couldn't malloc cmd name") : err_msg(4, cmd_path);
-		else { // if (next != last && last != -1)
-            ft_strdel(&cmd_path);
-            last[2] = 1;
+		else if ((last[2] = 1)) // if (next != last && last != -1)
             child_action(path_env, cmd_run, last, ++next);
-        }
-		ft_strdl(environ);
 		exit(1);
 	}
 	else if (pid < 0) //if fork problem
 		err_msg(5, cmd_path);
-	else
-    {
-	    if (waitpid(pid, NULL, 0) == -1)
-	        write(2, "msh: waitpid error *_*\n", 23);
-		if (last[2] == 1)
-        {
-	        printf("imchildPARENT\n");
-            ft_strdl(environ);
-            exit(1);
-        }
-    }
-    // if parent
-    printf("im REAL\n");
+	else if (waitpid(pid, NULL, 0) == -1)
+	    write(2, "msh: waitpid error *_*\n", 23);
+	if (last[2] == 1) //child is parent
+	    exit(1);
 	ft_strdel(&cmd_path);
 	return (1);
 }
