@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kkatelyn <kkatelyn@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/18 16:41:20 by kkatelyn          #+#    #+#             */
+/*   Updated: 2019/12/18 16:41:41 by kkatelyn         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishft.h"
 
-int     g_sign;
+int		g_sign;
 
 char	*child_prepare(char **cmd_run, char **path_env, int *last, int *next)
 {
@@ -30,24 +42,24 @@ int		child_action(char **path_env, char **cmd_run, int *last, int next)
 
 	if ((cmd_path = child_prepare(cmd_run, path_env, last, &next)) == NULL)
 		return (-1);
-    pid = fork();
+	pid = fork();
 	if ((g_sign = 1) && pid == 0 && execve(cmd_path, cmd_run, environ))
-    {
-        if (last[0] == -1)//if bin is not from search_obj
+	{
+		if (last[0] == -1)//if bin is not from search_obj
 			err_msg(4, cmd_path);
 		else if (!ft_strdel(&cmd_path) && last[0] == next) //all bins are searched
 			(cmd_path = search_obj(path_env, cmd_run[0], 0, last)) == NULL ?
 				err_msg(4, "couldn't malloc cmd name") : err_msg(4, cmd_path);
 		else if ((last[2] = 1)) // if (next != last && last != -1)
-            child_action(path_env, cmd_run, last, ++next);
+			child_action(path_env, cmd_run, last, ++next);
 		exit(1);
 	}
 	else if (pid < 0) //if fork problem
 		err_msg(5, cmd_path);
 	else if (waitpid(pid, NULL, 0) == -1)
-	    write(2, "msh: waitpid error *_*\n", 23);
+		write(2, "msh: waitpid error *_*\n", 23);
 	if (last[2] == 1) //child is parent
-	    exit(1);
+		exit(1);
 	ft_strdel(&cmd_path);
 	return (1);
 }
@@ -57,7 +69,7 @@ int		replace_prerun(char **path_env, char **to_run, char ***cmd_run)
 	int cond;
 
 	if (!path_env && !to_run && !cmd_run)
-	    return (-1);
+		return (-1);
 	if (replace_exp(&(*to_run)) == -1)
 		return (-1);
 	//split cmd and args by ` `, tabs etc
@@ -112,14 +124,14 @@ int		main(void)
 	char	*to_parse;
 	char	**to_run;
 
-    signal(SIGINT, parent_trap);
-    g_sign = 0;
-    to_run = NULL;
-    if (ft_get_env(NULL, 0, NULL, 0) == -1)
+	signal(SIGINT, parent_trap);
+	g_sign = 0;
+	to_run = NULL;
+	if (ft_get_env(NULL, 0, NULL, 0) == -1)
 		exit(1);
 	while (1)
 	{
-        write(1, "\033[1;35m{*__*} > \033[0m", 20);
+		write(1, "\033[1;35m{*__*} > \033[0m", 20);
 		//lets get a full cmd line
 		if ((get_next_line(0, &to_parse) == -1 && !err_msg(1, NULL))
 			|| to_parse == NULL)
