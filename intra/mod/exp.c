@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exp.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kkatelyn <kkatelyn@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/12/18 17:00:56 by kkatelyn          #+#    #+#             */
+/*   Updated: 2019/12/18 17:04:33 by kkatelyn         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishft.h"
 
 int		dollar_exp(int *i, char **to_replace)
 {
 	char	*var;
 	char	*value;
-	char    *tmp;
+	char	*tmp;
 	int		j;
 	int		t;
 
@@ -17,19 +29,19 @@ int		dollar_exp(int *i, char **to_replace)
 		return (-1);
 	value = env_value(var);
 	ft_strdel(&var);
-	if ((*i = repl_string(to_replace, value, t, j)) == -1)
+	if ((*i = repl_str(to_replace, value, t, j)) == -1)
 		return (-1);
 	*i = (*i == -2) ? (t - 1) : t;
 	return (0);
 }
 
-int		tilda_else(struct passwd *user, char **value, char **replace, char **v)
+int		tilda_else(struct passwd *user, char **value, char **replac, char **v)
 {
 	if ((user = getpwnam(*v)) != NULL)
 		*value = user->pw_dir;
 	else
 	{
-		if ((*replace)[0] == 'c' && (*replace)[1] == 'd' && (*replace)[2] == ' ')
+		if ((*replac)[0] == 'c' && (*replac)[1] == 'd' && (*replac)[2] == ' ')
 		{
 			if (!(*value = ft_strjoin("cd: ~", *v)) && !err_msg(1, NULL))
 				;
@@ -39,7 +51,6 @@ int		tilda_else(struct passwd *user, char **value, char **replace, char **v)
 			ft_strdel(v);
 			return (-1);
 		}
-		// if echo or else, just continue, as echo ~asddad => ~asddad
 		ft_strdel(v);
 		return (0);
 	}
@@ -69,13 +80,13 @@ int		tilda_exp(int *i, char **rs, int j, int t)
 	}
 	else if ((tilda_else(user = NULL, &v, rs, &var)) == -1)
 		return (-1);
-	if (!ft_strdel(&var) && v && ((j = repl_string(rs, v, t, j)) == -1 || j == 0))
+	if (!ft_strdel(&var) && v && ((j = repl_str(rs, v, t, j)) == -1 || j == 0))
 		return (j);
 	*i = t;
 	return (1);
 }
 
-int		 replace_exp(char **to_replace)
+int		replace_exp(char **to_replace)
 {
 	int i;
 
@@ -90,8 +101,7 @@ int		 replace_exp(char **to_replace)
 		i = (i < 0 ? 0 : i);
 		if ((*to_replace)[i] == '~' && tilda_exp(&i, to_replace, 0, i) == -1)
 			return (-1);
-        i = (i < 0 ? 0 : i);
-    }
+		i = (i < 0 ? 0 : i);
+	}
 	return (0);
 }
-
