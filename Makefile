@@ -8,7 +8,7 @@ OBJ = $(addprefix obj/, $(addprefix core/, $(CORE:.c=.o)) $(addprefix mod/, $(MO
 all: $(NAME)
 
 $(NAME): libft obj/ $(OBJ)
-	@gcc -g -L libft/ -lft $(OBJ) -o ./$(NAME)
+	@gcc -g -v -L libft/ -lft $(OBJ) -o ./$(NAME)
 
 obj/%.o: %.c
 	@gcc -Wall -Wextra -Werror -g -I libft/includes -I includes -c $< -o $@

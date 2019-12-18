@@ -49,3 +49,9 @@ int		ft_get_env(char *needle, int i, char **tmp, int err)
 	environ = tmp;
 	return (0);
 }
+
+void parent_trap(int sig)
+{
+    if (sig == SIGINT && g_sign == 0)
+        write(1, "\n\033[1;35m{*__*} > \033[0m", 21);
+}

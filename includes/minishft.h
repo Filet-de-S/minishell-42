@@ -10,6 +10,7 @@
 
 
 extern char **environ;
+extern int g_sign;
 
 char	*search_obj(char **env_path, char *needle, int *next, int *last);
 int     err_msg(int stat, char *info);
@@ -22,6 +23,7 @@ int 	in_exit(void);
 int		in_setenv(char *cmd_run, int i, char *needle);
 int		ft_get_env(char *needle, int i, char **tmp, int err);
 char    **complete_path(void);
+void    parent_trap(int sig);
 
 
 
